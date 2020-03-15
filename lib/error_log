@@ -1,0 +1,87 @@
+[29-Mar-2016 16:17:51 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[29-Mar-2016 16:17:51 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[29-Mar-2016 16:17:51 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[29-Mar-2016 16:17:56 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[29-Mar-2016 16:17:59 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[29-Mar-2016 16:17:59 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[29-Mar-2016 16:17:59 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[29-Mar-2016 16:18:01 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[29-Mar-2016 16:18:03 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[29-Mar-2016 16:18:03 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[14-May-2016 20:04:50 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[14-May-2016 20:04:57 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[14-May-2016 20:05:01 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[14-May-2016 20:05:04 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[14-May-2016 20:05:09 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[28-Jun-2016 22:31:52 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[28-Jun-2016 22:31:53 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[28-Jun-2016 22:31:54 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[28-Jun-2016 22:31:56 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[28-Jun-2016 22:31:57 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[28-Jun-2016 22:31:58 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[28-Jun-2016 22:32:00 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[28-Jun-2016 22:32:03 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[28-Jun-2016 22:32:05 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[28-Jun-2016 22:32:05 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[09-Jul-2016 11:04:32 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[09-Jul-2016 11:04:34 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[09-Jul-2016 11:04:35 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[09-Jul-2016 11:04:36 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[09-Jul-2016 11:04:38 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[09-Jul-2016 11:04:39 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[09-Jul-2016 11:04:40 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[09-Jul-2016 11:04:43 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[09-Jul-2016 11:04:46 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[09-Jul-2016 11:04:46 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[12-Jul-2016 16:33:47 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[12-Jul-2016 16:33:54 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[12-Jul-2016 16:33:57 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[12-Jul-2016 16:33:59 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[12-Jul-2016 16:34:04 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[12-Jul-2016 16:34:06 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[12-Jul-2016 16:34:09 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[12-Jul-2016 16:34:16 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[12-Jul-2016 16:34:20 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[12-Jul-2016 16:34:20 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[10-Aug-2016 12:19:28 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[10-Aug-2016 12:19:28 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[10-Aug-2016 12:19:30 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[10-Aug-2016 12:19:30 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[10-Aug-2016 12:19:30 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[10-Aug-2016 12:19:32 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[10-Aug-2016 12:19:33 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[10-Aug-2016 12:19:35 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[10-Aug-2016 12:19:36 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[10-Aug-2016 12:19:36 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[19-Sep-2016 05:39:13 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[19-Sep-2016 05:39:15 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[19-Sep-2016 05:39:16 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[19-Sep-2016 05:39:18 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[19-Sep-2016 05:39:20 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[19-Sep-2016 05:39:22 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[19-Sep-2016 05:39:24 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[19-Sep-2016 05:39:28 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[19-Sep-2016 05:39:33 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[19-Sep-2016 05:39:33 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[23-Sep-2016 18:57:21 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[23-Sep-2016 18:57:23 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[23-Sep-2016 18:57:24 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[23-Sep-2016 18:57:26 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[23-Sep-2016 18:57:28 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[23-Sep-2016 18:57:30 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[23-Sep-2016 18:57:31 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[23-Sep-2016 18:57:35 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[23-Sep-2016 18:57:38 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[23-Sep-2016 18:57:38 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[04-Oct-2016 19:03:29 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[21-Oct-2016 09:00:44 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_fault.php on line 14
+[21-Oct-2016 11:03:28 UTC] PHP Warning:  require_once(Mail/mimeDecode.php): failed to open stream: No such file or directory in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[21-Oct-2016 11:03:28 UTC] PHP Fatal error:  require_once(): Failed opening required 'Mail/mimeDecode.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/networkl/public_html/ws/lib/nusoapmime.php on line 42
+[21-Oct-2016 15:58:34 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_transport_http.php on line 15
+[21-Oct-2016 16:00:38 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_val.php on line 17
+[21-Oct-2016 16:58:00 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.wsdl.php on line 15
+[21-Oct-2016 17:57:28 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soapclient.php on line 26
+[21-Oct-2016 19:25:44 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_server.php on line 16
+[23-Oct-2016 02:38:33 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.soap_parser.php on line 15
+[23-Oct-2016 13:23:39 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
+[24-Oct-2016 02:56:23 UTC] PHP Fatal error:  Class 'nusoap_base' not found in /home/networkl/public_html/ws/lib/class.xmlschema.php on line 15
