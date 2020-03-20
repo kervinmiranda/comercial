@@ -1,4 +1,34 @@
 // JavaScript Document 
+	//Validate Form
+	function validateForm(div){
+		var validate = true;
+		//Validate TextBox
+		$("#nuevo input").each(function (index) {
+			if($(this).prop('required')){
+		        if ($(this).val() == ''){
+					$(this).parent().addClass('has-error');
+					$(this).attr('placeholder','Campo Obligatorio');
+					validate = false;
+				}else{
+					$(this).parent().removeClass('has-error').addClass('has-success');
+				}
+		    }		    
+		});
+		//Validate Select
+		$("#nuevo select").each(function (index) {
+			if($(this).prop('required')){
+				if ($('option:selected', this).index() == 0){
+					$(this).parent().addClass('has-error');
+					$(this).attr('placeholder','Campo Obligatorio');
+					validate = false;				
+				}else{
+					$(this).parent().removeClass('has-error').addClass('has-success');
+				}
+			}
+		});
+
+		return validate;
+	}
 
 	// Function Show and hide buttons report
 	function getbuttons(niv, columns, title){
@@ -134,9 +164,7 @@
 		}//Enf for
 	}//End Function
 
-
 $(document).ready(function(){
-
 //Buscar Notificaciones
 function notificacion(){
 	$.post("include/pdo/notificacion.php",{function:"getNotifications"},function(data){
