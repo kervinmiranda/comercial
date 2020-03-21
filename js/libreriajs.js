@@ -3,7 +3,7 @@
 	function validateForm(div){
 		var validate = true;
 		//Validate TextBox
-		$("#nuevo input").each(function (index) {
+		$("input", $(div)).each(function (index) {
 			if($(this).prop('required')){
 		        if ($(this).val() == ''){
 					$(this).parent().addClass('has-error');
@@ -15,7 +15,7 @@
 		    }		    
 		});
 		//Validate Select
-		$("#nuevo select").each(function (index) {
+		$("select", $(div)).each(function (index) {
 			if($(this).prop('required')){
 				if ($('option:selected', this).index() == 0){
 					$(this).parent().addClass('has-error');

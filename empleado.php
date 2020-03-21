@@ -138,7 +138,7 @@ $(document).ready(function(){
 
 //Funcion para Validar y Guardar Nuevo Empleado
 	$('#enviar').click(function(){
-		if (validateForm($('#nuevo'))){
+		if (validateForm('#nuevo')){
 			$('#nuevo').bPopup().close();
 			bootbox.confirm('¿Seguro que desea Incluir el empleado?', function(result){
 				if (result == true){
