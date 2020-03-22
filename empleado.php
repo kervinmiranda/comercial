@@ -129,10 +129,6 @@ $(document).ready(function(){
 
 //Mostrar Formulario de Nuevo Empleado
 	$('#newUser').click(function(){
-		$('body input[type=text]').val('').attr('placeholder','').parent().removeClass('has-error has-success');		
-		$('body select option:first').prop("selected", "selected");
-		$('body select').parent().removeClass('has-error has-success');
-		$('body textarea').val('').attr('placeholder','').parent().removeClass('has-error has-success');
 		$('#nuevo').bPopup();		
 	});
 
@@ -142,13 +138,12 @@ $(document).ready(function(){
 			$('#nuevo').bPopup().close();
 			bootbox.confirm('¿Seguro que desea Incluir el empleado?', function(result){
 				if (result == true){
-					accion= 'nuevo';
 					cedula = $('#ci').val();
 					nombre = $('#nombre').val();
 					apellido = $('#apellido').val();
 					cargo = $('#cargo').val();
 					ingreso = $('#fingreso').val();
-					dept = $('#departamento').val();
+					departamento = $('#departamento').val();
 					razon = $('#razon').val();
 					agencia = $('#agencia').val();
 					telefono = $('#telefono').val();
@@ -165,38 +160,17 @@ $(document).ready(function(){
 					userlib = $('#userlib').val();
 					cajafact = $('#cajafact').val();
 					fcambio = $('#fcambio').val();				
-					$.post('include/guardar_empleado.php', {accion:accion, cedula:cedula, nombre:nombre, apellido:apellido, cargo:cargo, ingreso:ingreso, dept:dept, razon:razon, agencia:agencia, telefono:telefono, correo:correo, turno:turno, supervisor:supervisor, hijos:hijos, zonares:zonares, direccion:direccion, observacion:observacion, estudio:estudio, instruccion: instruccion, titulo:titulo, userlib:userlib, cajafact:cajafact, fcambio:fcambio}, function(data){
+					$.post('include/pdo/empleado.php', {function:"insertEmployee", cedula:cedula, nombre:nombre, apellido:apellido, cargo:cargo, ingreso:ingreso, departamento:departamento, razon:razon, agencia:agencia, telefono:telefono, correo:correo, turno:turno, supervisor:supervisor, hijos:hijos, zonares:zonares, direccion:direccion, observacion:observacion, estudio:estudio, instruccion: instruccion, titulo:titulo, userlib:userlib, cajafact:cajafact, fcambio:fcambio}, function(data){
 						if (data  == '0'){
 							$('#error').html('<strong>¡Error!</strong> Error al incluir los datos, Intente mas tarde.').fadeIn(1000).fadeOut(15000);
 						}if (data == '1'){				
 							$('#mensaje').html('<strong>¡Exito!</strong> Empleado Agregado Correctamente').fadeIn(1000).fadeOut(15000);	
-							$('#ci').val('');
-							$('#nombre').val('');
-							$('#apellido').val('');
-							$('#cargo').val('');
-							$('#fingreso').val('');
-							$('#dept').val('');
-							$('#razon').val('');
-							$('#agencia option:first-child').attr('selected', 'selected');
-							$('#telefono').val('');
-							$('#correo').val('');
-							$('#turno option:first-child').attr('selected', 'selected');
-							$('#supervisor').val('');
-							$('#hijos').val('');
-							$('#zonares').val('');
-							$('#direccion').val('');
-							$('#observacion').val('');
-							$('#estudio option:first-child').attr('selected', 'selected');
-							$('#instruccion').val('');
-							$('#titulo').val('');
-							$('#userlib').val('');
-							$('#cajafact').val('');
-							$('#fcambio').val('');						
 							$('#lista').DataTable().ajax.reload();
+							clearForm('#nuevo');
 						}if (data == 'repetido'){
 							$('#error').html('<strong>¡Error!</strong> El Número de Cédula ya está registrada. Verifique e Intente Nuevamente').fadeIn(1000).fadeOut(15000);					
 						}//End if
-					});//End post			
+					});//End post	
 				}else{
 					$('#nuevo').bPopup();
 				}//End if//End if
@@ -206,240 +180,76 @@ $(document).ready(function(){
 
 //Mostrar Formulario de editar Empleado
 	$('#lista tbody').on('click', '.edit', function(){
-	var elemento = $(this).attr('id').split('|');
-	var elem = elemento[0].split('|');
-	var empleado = ci = elem[0];
-	var modulo = 'solicitud';
-	
-		ci = elem[0];
-		nombre = elemento[1];
-		apellido = elemento[2];
-		var cargo = elemento[3];
-		ingreso = elemento[4];
-		dpto = elemento[5];
-		razon = elemento[6];
-		agencia = elemento[7];
-		telefono = elemento[8];
-		correo = elemento[9];
-		turno = elemento[10];
-		supervisor = elemento[11];
-		hijos = elemento[12];
-		zonares = elemento[13];
-		direccion = elemento[14];
-		estudio = elemento[15];
-		instruccion = elemento[16];
-		titulo = elemento[17];
-		userlib = elemento[18];
-		cajafact = elemento[19];
-		fcambio = elemento[20];
-		observacion = elemento[21];
-		
-		$('#ci2').val(ci);
-		$('#nombre2').val(nombre).parent().removeClass('has-error has-success');
-		$('#apellido2').val(apellido).parent().removeClass('has-error has-success');
-		$('#cargo2 option[value="'+ cargo +'"]').prop('selected', 'selected');
-		$('#fingreso2').val(ingreso).parent().removeClass('has-error has-success');
-		$('#departamento2').val(dpto).parent().removeClass('has-error has-success');
-		$('#razon2').val(razon).parent().removeClass('has-error has-success');
-		$('#agencia2 option[value="'+ agencia +'"]').prop('selected', 'selected');
-		$('#telefono2').val(telefono).parent().removeClass('has-error has-success');
-		$('#correo2').val(correo).parent().removeClass('has-error has-success');
-		$('#turno2').val(turno).parent().removeClass('has-error has-success');
-		$('#supervisor2').val(supervisor).parent().removeClass('has-error has-success');
-		$('#hijos2').val(hijos).parent().removeClass('has-error has-success');
-		$('#zonares2').val(zonares).parent().removeClass('has-error has-success');
-		$('#direccion2').val(direccion).parent().removeClass('has-error has-success');
-		$('#observacion2').val(observacion).parent().removeClass('has-error has-success');
-		$('#estudio2').val(estudio).parent().removeClass('has-error has-success');
-		$('#instruccion2').val(instruccion).parent().removeClass('has-error has-success');
-		$('#titulo2').val(titulo).parent().removeClass('has-error has-success');
-		$('#userlib2').val(userlib).parent().removeClass('has-error has-success');
-		$('#cajafact2').val(cajafact).parent().removeClass('has-error has-success');
-		$('#fcambio2').val(fcambio).parent().removeClass('has-error has-success');	
-
-		$.post("include/buscar_empleado.php", {empleado:empleado, modulo:modulo}, function(data){
-				var obj = jQuery.parseJSON(data);
-					$('#ci2').val(obj.ci);
-					$('#nombre2').val(obj.nombre).parent().removeClass('has-error has-success');
-					$('#apellido2').val(obj.apellido).parent().removeClass('has-error has-success');
-					$('#cargo2').val(obj.cargo).parent().removeClass('has-error has-success');
-					$('#fingreso2').val(obj.ingreso).parent().removeClass('has-error has-success');
-					$('#correo2').val(obj.correo).parent().removeClass('has-error has-success');
-					$('#telefono2').val(obj.telefono).parent().removeClass('has-error has-success');
-					$('#telefono2').val(obj.telefono).parent().removeClass('has-error has-success');
-					$('#departamento2').val(obj.dpto).parent().removeClass('has-error has-success');
-					$('#razon2').val(obj.razon).parent().removeClass('has-error has-success');
-					$('#agencia2').val(obj.agencia).parent().removeClass('has-error has-success');
-					$('#turno2').val(obj.turno).parent().removeClass('has-error has-success');
-					$('#supervisor2').val(obj.supervisor).parent().removeClass('has-error has-success');
-					$('#hijos2').val(obj.hijos).parent().removeClass('has-error has-success');
-					$('#zonares2').val(obj.zonares).parent().removeClass('has-error has-success');
-					$('#direccion2').val(obj.direccion).parent().removeClass('has-error has-success');
-					$('#observacion2').val(obj.observacion).parent().removeClass('has-error has-success');
-					$('#estudio2').val(obj.estudio).parent().removeClass('has-error has-success');
-					$('#instruccion2').val(obj.instruccion).parent().removeClass('has-error has-success');
-					$('#titulo2').val(obj.titulo).parent().removeClass('has-error has-success');
-					$('#cajafact2').val(obj.cajafact).parent().removeClass('has-error has-success');
-					$('#fcambio2').val(obj.fcambio).parent().removeClass('has-error has-success');	
-			});//End post				
+	var cedula = $(this).attr('id');
+		$.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
+			var obj = jQuery.parseJSON(data);
+			$('#ci2').val(obj.ci);
+			$('#nombre2').val(obj.nombre).parent().removeClass('has-error has-success');
+			$('#apellido2').val(obj.apellido).parent().removeClass('has-error has-success');
+			$('#cargo2').val(obj.cargo).parent().removeClass('has-error has-success');
+			$('#fingreso2').val(obj.fecha_ingreso).parent().removeClass('has-error has-success');
+			$('#correo2').val(obj.correo).parent().removeClass('has-error has-success');
+			$('#telefono2').val(obj.telefono).parent().removeClass('has-error has-success');
+			$('#departamento2').val(obj.dpto).parent().removeClass('has-error has-success');
+			$('#razon2').val(obj.razon_social).parent().removeClass('has-error has-success');
+			$('#agencia2').val(obj.agencia).parent().removeClass('has-error has-success');
+			$('#turno2').val(obj.turno).parent().removeClass('has-error has-success');
+			$('#supervisor2').val(obj.supervisor).parent().removeClass('has-error has-success');
+			$('#hijos2').val(obj.hijos).parent().removeClass('has-error has-success');
+			$('#zonares2').val(obj.zonares).parent().removeClass('has-error has-success');
+			$('#direccion2').val(obj.direccion).parent().removeClass('has-error has-success');
+			$('#observacion2').val(obj.observacion).parent().removeClass('has-error has-success');
+			$('#estudio2').val(obj.estudio).parent().removeClass('has-error has-success');
+			$('#instruccion2').val(obj.instruccion).parent().removeClass('has-error has-success');
+			$('#titulo2').val(obj.titulo).parent().removeClass('has-error has-success');
+			$('#cajafact2').val(obj.cajafact).parent().removeClass('has-error has-success');
+			$('#fcambio2').val(obj.fecha_camb).parent().removeClass('has-error has-success');
+		});//End post				
 		$('#editar').bPopup();		
 	});
 	
-
 //Funcion para Validar y Editar Empleado
 	$('#enviar2').click(function(){
-		if ($("#nombre2").val() == ''){
-			$('#nombre2').parent().addClass('has-error');
-			$('#nombre2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#nombre2').parent().removeClass('has-error').addClass('has-success');
+		if (validateForm('#editar')){
+			$('#editar').bPopup().close();
+			bootbox.confirm('¿Seguro que desea Editar el empleado?', function(result){
+				if (result == true){
+					cedula = $('#ci2').val();
+					nombre = $('#nombre2').val();
+					apellido = $('#apellido2').val();
+					cargo = $('#cargo2').val();
+					ingreso = $('#fingreso2').val();
+					hijos = $('#hijos2').val();
+					departamento = $('#departamento2').val();
+					razon = $('#razon2').val();
+					agencia = $('#agencia2').val();
+					telefono = $('#telefono2').val();
+					correo = $('#correo2').val();
+					turno = $('#turno2').val();
+					supervisor = $('#supervisor2').val();
+					zonares = $('#zonares2').val();
+					direccion = $('#direccion2').val();
+					observacion = $('#observacion2').val();
+					estudio = $('#estudio2').val();
+					instruccion = $('#instruccion2').val();
+					titulo = $('#titulo2').val();
+					userlib = $('#userlib2').val();
+					cajafact = $('#cajafact2').val();
+					fcambio = $('#fcambio2').val();				
+					$.post('include/pdo/empleado.php', {function:"editEmployee", cedula:cedula, nombre:nombre, apellido:apellido, cargo:cargo, ingreso:ingreso, hijos:hijos, departamento:departamento, razon:razon, agencia:agencia, telefono:telefono, correo:correo, turno:turno, supervisor:supervisor, zonares:zonares, direccion:direccion, observacion:observacion, estudio:estudio, instruccion: instruccion, titulo:titulo, userlib:userlib, cajafact:cajafact, fcambio:fcambio}, function(data){
+						if (data  == '0'){
+							$('#error').html('<strong>¡Error!</strong> Error al Editar los datos, Intente mas tarde.').fadeIn(1000).fadeOut(15000);
+						}if (data == '1'){				
+							$('#mensaje').html('<strong>¡Exito!</strong> Empleado Editado Correctamente').fadeIn(1000).fadeOut(15000);	
+							$('#ci2').val('');											
+							$('#lista').DataTable().ajax.reload();
+						}//End if
+					});//End post			
+				}else{
+					$('#editar').bPopup();
+				}//End if//End if
+			});// End Function boot.confirm
 		}
-		if ($("#apellido2").val() == ''){
-			$('#apellido2').parent().addClass('has-error');
-			$('#apellido2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#apellido2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#cargo2 option:selected").index() == 0){
-			$('#cargo2').parent().addClass('has-error');
-			$('#cargo2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#cargo2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#fingreso2").val() == ''){
-			$('#fingreso2').parent().addClass('has-error');
-			$('#fingreso2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#fingreso2').parent().removeClass('has-error').addClass('has-success');
-		}
-
-		if ($("#departamento2").val() == ''){
-			$('#departamento2').parent().addClass('has-error');
-			$('#departamento2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#departamento2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#razon2").val() == ''){
-			$('#razon2').parent().addClass('has-error');
-			$('#razon2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{
-			$('#razon2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#agencia2 option:selected").index() == 0) {
-			$('#agencia2').parent().addClass('has-error');
-			$('#agencia2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#agencia2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#telefono2").val() == ''){
-			$('#telefono2').parent().addClass('has-error');
-			$('#telefono2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#telefono2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#turno2 option:selected").index() == 0){
-			$('#turno2').parent().addClass('has-error');
-			$('#turno2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#turno2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#supervisor2").val() == ''){
-			$('#supervisor2').parent().addClass('has-error');
-			$('#supervisor2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#supervisor2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#hijos2").val() == ''){
-			$('#hijos2').parent().addClass('has-error');
-			$('#hijos2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#hijos2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#zonares2").val() == ''){
-			$('#zonares2').parent().addClass('has-error');
-			$('#zonares2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#zonares2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#direccion2").val() == ''){
-			$('#direccion2').parent().addClass('has-error');
-			$('#direccion2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#direccion2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#estudio2 option:selected").index() == 0){
-			$('#estudio2').parent().addClass('has-error');
-			$('#estudio2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#estudio2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#instruccion2").val() == ''){
-			$('#instruccion2').parent().addClass('has-error');
-			$('#instruccion2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#instruccion2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#titulo2").val() == ''){
-			$('#titulo2').parent().addClass('has-error');
-			$('#titulo2').attr('placeholder','Campo Obligatorio');
-			return false;				
-		}else{		
-			$('#titulo2').parent().removeClass('has-error').addClass('has-success');
-		}
-		$('#editar').bPopup().close();
-		bootbox.confirm('¿Seguro que desea Editar el empleado?', function(result){
-			if (result == true){
-				accion= 'editar';
-				cedula = $('#ci2').val();
-				nombre = $('#nombre2').val();
-				apellido = $('#apellido2').val();
-				cargo = $('#cargo2').val();
-				ingreso = $('#fingreso2').val();
-				hijos = $('#hijos2').val();
-				depto = $('#departamento2').val();
-				razon = $('#razon2').val();
-				agencia = $('#agencia2').val();
-				telefono = $('#telefono2').val();
-				correo = $('#correo2').val();
-				turno = $('#turno2').val();
-				supervisor = $('#supervisor2').val();
-				zonares = $('#zonares2').val();
-				direccion = $('#direccion2').val();
-				observacion = $('#observacion2').val();
-				estudio = $('#estudio2').val();
-				instruccion = $('#instruccion2').val();
-				titulo = $('#titulo2').val();
-				userlib = $('#userlib2').val();
-				cajafact = $('#cajafact2').val();
-				fcambio = $('#fcambio2').val();				
-				$.post('include/guardar_empleado.php', {accion:accion, cedula:cedula, nombre:nombre, apellido:apellido, cargo:cargo, ingreso:ingreso, hijos:hijos, depto:depto, razon:razon, agencia:agencia, telefono:telefono, correo:correo, turno:turno, supervisor:supervisor,  zonares:zonares, direccion:direccion, observacion:observacion, estudio:estudio, instruccion: instruccion, titulo:titulo, userlib:userlib, cajafact:cajafact, fcambio:fcambio}, function(data){
-					if (data  == '0'){
-						$('#error').html('<strong>¡Error!</strong> Error al Editar los datos, Intente mas tarde.').fadeIn(1000).fadeOut(15000);
-					}if (data == '1'){				
-						$('#mensaje').html('<strong>¡Exito!</strong> Empleado Editado Correctamente').fadeIn(1000).fadeOut(15000);	
-						$('#ci2').val('');											
-						$('#lista').DataTable().ajax.reload();
-					}//End if
-				});//End post			
-			}else{
-				$('#editar').bPopup();
-			}//End if//End if
-		});// End Function boot.confirm
 	});//End Function
 
 //Cambiar el estatus del Empleado
@@ -539,7 +349,7 @@ $(document).ready(function(){
 			if (data != 0){
 			var json = jQuery.parseJSON(data);		
 				$.each(json, function(idx, obj) {
-					$('#cargo, #cargo2').append('<option value = "'+ obj.id +' ">' + obj.descripcion + '</option>'); 
+					$('#cargo, #cargo2').append('<option value = "'+ obj.descripcion +'">' + obj.descripcion + '</option>'); 
 				})
 			}
 		});//End post
@@ -550,7 +360,7 @@ $(document).ready(function(){
 			if (data != 0){
 			var json = jQuery.parseJSON(data);		
 				$.each(json, function(idx, obj) {
-					$('#agencia, #agencia2').append('<option value = "'+ obj.codigo +' ">' + obj.descripcion + '</option>'); 
+					$('#agencia, #agencia2').append('<option value = "'+ obj.codigo +'">' + obj.descripcion + '</option>'); 
 				})
 			}
 		});//End post
@@ -700,7 +510,7 @@ $(document).ready(function(){
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Teléfono</label>
-               	<input  type="text" name="telefono" id="telefono" class="form-control integer text-center" maxlength="30" required>
+               	<input type="text" name="telefono" id="telefono" class="form-control integer text-center" maxlength="30" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>Correo</label>
@@ -798,46 +608,47 @@ $(document).ready(function(){
             </div>
             <div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Nombres</label>
-               	<input  type="text" name="nombre2" id="nombre2"class="form-control text-center">
+               	<input type="text" name="nombre2" id="nombre2"class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Apellidos</label>
-               	<input  type="text" name="apellido2" id="apellido2" class="form-control text-center">
+               	<input type="text" name="apellido2" id="apellido2" class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Cargo</label>
-               	<select name="cargo2" name="cargo2" id="cargo2" class="form-control">
-                	                   
+               	<select name="cargo2" name="cargo2" id="cargo2" class="form-control" required>
+               		<option>Seleccionar...</option>
                 </select>  
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Fecha Ingreso</label>
-               	<input  type="text" name="fingreso2" id="fingreso2"class="form-control text-center">
+               	<input type="text" name="fingreso2" id="fingreso2"class="form-control text-center" required>
             </div>
             <div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Departamento</label>
-               	<input  type="text" name="departamento2" id="departamento2"class="form-control text-center">
+               	<input type="text" name="departamento2" id="departamento2"class="form-control text-center" required>
             </div>
             <div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Razon Social</label>
-               	<input  type="text" name="razon2" id="razon2"class="form-control text-center">
+               	<input type="text" name="razon2" id="razon2"class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Agencia</label>
-               	<select name="agencia2" id="agencia2" class="form-control text-center">				   
+               	<select name="agencia2" id="agencia2" class="form-control text-center" required>
+               		<option>Seleccionar...</option>			   
               	</select> 
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Teléfono</label>
-               	<input  type="text" name="telefono2" id="telefono2"class="form-control integer text-center" maxlength="11">
+               	<input type="text" name="telefono2" id="telefono2"class="form-control integer text-center" maxlength="11" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>Correo</label>
-               	<input  type="text" name="correo2" id="correo2" class="form-control text-center" maxlength="30">
+               	<input type="text" name="correo2" id="correo2" class="form-control text-center" maxlength="30">
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Turno</label>
-               	<select name="turno2" id="turno2" class="form-control text-center">
+               	<select name="turno2" id="turno2" class="form-control text-center" required>
                		<option>Seleccionar...</option>
                     <option value="1">Lunes a Viernes</option>
                     <option value="2">Martes a Sábado</option>
@@ -845,19 +656,19 @@ $(document).ready(function(){
             </div>            
             <div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Supervisor</label>
-               	<input  type="text" name="supervisor2" id="supervisor2"class="form-control text-center">
+               	<input type="text" name="supervisor2" id="supervisor2"class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Nro de Hijos</label>
-               	<input  type="text" name="hijos2" id="hijos2" class="form-control integer text-center" maxlength="2">
+               	<input type="text" name="hijos2" id="hijos2" class="form-control integer text-center" maxlength="2" required>
             </div>           
            	<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Zona de Residencia</label>
-               	<input  type="text" name="zonares2" id="zonares2" class="form-control text-center">
+               	<input type="text" name="zonares2" id="zonares2" class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 text-center">
 				<label>* Dirección</label>
-               	<textarea name="direccion2" id="direccion2" class="form-control text-center"></textarea>
+               	<textarea name="direccion2" id="direccion2" class="form-control text-center" required></textarea>
             </div>            
        	</div>       
 		<div class="panel">
@@ -874,11 +685,11 @@ $(document).ready(function(){
             </div>
    			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Grado de Instrucción</label>
-               	<input  type="text" name="instruccion2" id="instruccion2" class="form-control text-center">
+               	<input type="text" name="instruccion2" id="instruccion2" class="form-control text-center" required>
             </div> 
    			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>* Titulo</label>
-               	<input type="text" name="titulo2" id="titulo2"class="form-control text-center">
+               	<input type="text" name="titulo2" id="titulo2"class="form-control text-center" required>
             </div>
 		</div>
 		<div class="panel">
@@ -887,7 +698,7 @@ $(document).ready(function(){
  		<div class="panel-body">
             <div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>Usuario LIB</label>
-               	<input  type="text" name="userlib2" id="userlib2" class="form-control text-center">
+               	<input type="text" name="userlib2" id="userlib2" class="form-control text-center">
             </div>        
 			<div class="form-group col-xs-12 col-md-6 col-lg-3 text-center">
 				<label>Caja Facturación</label>

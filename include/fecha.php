@@ -73,23 +73,26 @@ function fecha_completa($fecha){
 
 //Funcion para cambiar el formato de la fecha dia/mes/año a año-mes-día 
 function cambiarFormatoFecha($fecha){
-	if ($fecha != ""){ 
-		list($dia,$mes,$anio)=explode("/",$fecha); 
-		return $anio."-".$mes."-".$dia; 
+	$date = DateTime::createFromFormat('d/m/Y', $fecha);
+	if (!$date) {
+	    return "";
+	    exit(1);
 	}else{
-		return "";	
+		return $date->format('Y-m-d');
 	}
-  }
+}
 
 //Funcion para cambiar el formato de la fecha año-mes-día a dia/mes/año 
 function cambiarFormatoFecha2($fecha){
-	if ($fecha != ""){ 
-		list($anio,$mes,$dia)=explode("-",$fecha); 
-		return $dia."/".$mes."/".$anio;
+	$date = DateTime::createFromFormat('Y-m-d', $fecha);
+	if (!$date) {
+	    return "";
+	    exit(1);
 	}else{
-		return "";	
-	}
+		return $date->format('d/m/Y');
+	}	
   }
+  
 $time = fecha_completa(date('Y/m/d')).'<br>'.date('h:i a', time()-14400);
 
 function dias_transcurridos($fecha_i,$fecha_f)

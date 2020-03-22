@@ -38,11 +38,20 @@ if(isset($_SESSION['user'])){
 	}
 
 	// Insert Agency
-	function insertAgency($name){
-		if (searchByName($name) == '0'){
+	function insertAgency($codigo, $horario, $descripcion, $tipo, $departamento){
+		if (searchByName($codigo) == '0'){
+			$codigo = ucwords(strtoupper($codigo));
+			$descripcion = ucwords(strtolower($descripcion));
+			$tipo = ucwords(strtolower($tipo));
+			$departamento = ucwords(strtolower($departamento));
 			$objdatabase = new Database();
-			$sql = $objdatabase->prepare("INSERT INTO comercial_agencia (descripcion, estatus) VALUES (:name, 1)");
-			$sql->bindParam(':name', strtoupper(trim($name)), PDO::PARAM_STR);
+			$sql = $objdatabase->prepare("INSERT INTO comercial_agencia (codigo, horario, descripcion, tipo, departamento, estatus) VALUES (:codigo, :horario, :descripcion, :tipo, :departamento, 1)");
+			//Definimos los parametros de la Query
+			$sql->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+			$sql->bindParam(':horario', $horario, PDO::PARAM_STR);
+			$sql->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+			$sql->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+			$sql->bindParam(':departamento', $departamento, PDO::PARAM_STR);
 			if ($sql->execute()){
 			   	$data = "1";
 			}else{
@@ -73,6 +82,9 @@ if(isset($_SESSION['user'])){
 
 	// Edit Agency
 	function editAgency($id, $tipo, $departamento, $horario, $descripcion ){
+		$tipo = ucwords(strtolower($tipo));
+		$descripcion = ucwords(strtolower($descripcion));
+		$departamento = ucwords(strtolower($departamento));
 		$objdatabase = new Database();
 		$sql = $objdatabase->prepare("UPDATE comercial_agencia SET tipo =:tipo, horario =:horario, descripcion =:descripcion, departamento =:departamento WHERE id =:id");
 		$sql->bindParam(':id', $id, PDO::PARAM_STR);
@@ -139,6 +151,7 @@ if(isset($_SESSION['user'])){
 		return $data;
 	}
 
+	//Get Horaries
 	function getHorario(){
 		$objdatabase = new Database();
 		$sql = $objdatabase->prepare("SELECT DISTINCT horario FROM comercial_agencia ORDER BY horario DESC");
@@ -156,6 +169,9 @@ if(isset($_SESSION['user'])){
 	if (isset($_POST['function'])){
 		$function  = $_POST['function']; //Obtener la Opción a realizar
 		switch ($function) {
+			case "getAgencies":
+				echo json_encode(getAgencies());
+				break;
 			case "getAllAgencies":
 				getAllAgencies();
 				break;
@@ -166,7 +182,7 @@ if(isset($_SESSION['user'])){
 				echo editAgency($_POST['id'], $_POST['tipo'], $_POST['departamento'], $_POST['horario'], $_POST['descripcion']);
 				break;
 			case "insertAgency":
-				echo insertAgency($_POST['nombre']);
+				echo insertAgency($_POST['codigo'], $_POST['horario'], $_POST['descripcion'], $_POST['tipo'], $_POST['departamento']);
 				break;
 			case "statusAgency":
 				echo statusAgency($_POST['id']);

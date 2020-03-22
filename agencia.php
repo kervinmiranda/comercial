@@ -55,70 +55,36 @@ $(document).ready(function(){
 	
 //Validar y Agregar Agencia
 	$("#enviar").click(function(){		
-		if ($("#codigo").val() == ''){
-			$('#codigo').parent().addClass('has-error');
-			$('#codigo').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#codigo').parent().removeClass('has-error').addClass('has-success');
-		};		
-		if ($("#tipo option:selected").index() == 0){
-			$('#tipo').parent().addClass('has-error');
-			$('#tipo').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#tipo').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#departamneto").val() == ''){
-			$('#departamneto').parent().addClass('has-error');
-			$('#departamneto').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#departamneto').parent().removeClass('has-error').addClass('has-success');
-		}		
-		if ($("#horario option:selected").index() == 0){
-			$('#horario').parent().addClass('has-error');
-			$('#horario').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#horario').parent().removeClass('has-error').addClass('has-success');
-		};		
-		if ($("#descripcion").val() == ''){
-			$('#descripcion').parent().addClass('has-error');
-			$('#descripcion').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#descripcion').parent().removeClass('has-error').addClass('has-success');
-		};	
-		accion= 'nuevo';
-		codigo = $('#codigo').val();
-		tipo = $('#tipo').val();
-		departamento = $('#departamneto').val();
-		horario = $('#horario').val();
-		descripcion = $('#descripcion').val();		
-		$('#nuevo').bPopup().close();
-		bootbox.confirm('¿Seguro que desea Incluir la Agencia?', function(result){
-			if (result == true){
-				$.post('include/guardar_agencia.php', {accion:accion, codigo:codigo, tipo:tipo, departamento:departamento, horario:horario,descripcion:descripcion}, function(data){
-					if (data  == '0'){
-						$('#error').html('<strong>¡Error!</strong> Error al Incluir la Agencia, Intente mas tarde').fadeIn(1000).fadeOut(5000);	
-					}else if (data == '1'){
-						$('#mensaje').html('<strong>¡Exito!</strong> Agencia Incluida Correctamente').fadeIn(1000).fadeOut(5000);		 
-						$('#codigo').val('');
-						$('#horario').val('');
-						$('#descripcion').val('');
-						$('#lista').DataTable().ajax.reload();
-					}else if (data == 'repetido'){
-						$('#alerta').html('<strong>¡Alerta!</strong> Ya existe una Agencia con ese Código').fadeIn(1000).fadeOut(5000);
-						$('#codigo').val('');
-						$('#horario').val('');
-						$('#descripcion').val('');			
-					}//End if
-				});//End post	
-			}else{
-			$('#nuevo').bPopup();
-			}//End if			 
-		});//End Function	
+		if (validateForm('#nuevo')){
+			codigo = $('#codigo').val();
+			tipo = $('#tipo').val();
+			departamento = $('#departamento').val();
+			horario = $('#horario').val();
+			descripcion = $('#descripcion').val();		
+			$('#nuevo').bPopup().close();
+			bootbox.confirm('¿Seguro que desea Incluir la Agencia?', function(result){
+				if (result == true){
+					$.post('include/pdo/agencia.php', {function:"insertAgency", codigo:codigo, horario:horario, descripcion:descripcion, tipo:tipo, departamento:departamento}, function(data){
+						if (data  == '0'){
+							$('#error').html('<strong>¡Error!</strong> Error al Incluir la Agencia, Intente mas tarde').fadeIn(1000).fadeOut(5000);	
+						}else if (data == '1'){
+							$('#mensaje').html('<strong>¡Exito!</strong> Agencia Incluida Correctamente').fadeIn(1000).fadeOut(5000);		 
+							$('#codigo').val('');
+							$('#horario').val('');
+							$('#descripcion').val('');
+							$('#lista').DataTable().ajax.reload();
+						}else if (data == 'repetido'){
+							$('#alerta').html('<strong>¡Alerta!</strong> Ya existe una Agencia con ese Código').fadeIn(1000).fadeOut(5000);
+							$('#codigo').val('');
+							$('#horario').val('');
+							$('#descripcion').val('');			
+						}//End if
+					});//End post	
+				}else{
+				$('#nuevo').bPopup();
+				}//End if			 
+			});//End Function
+		}//End Validate Form
 	});
 
 //Mostrar Formulario de Editar Agencia
@@ -138,57 +104,31 @@ $(document).ready(function(){
 
 //Validar y Editar agencia
 	$("#enviar2").click(function(){
-		if ($("#tipo2 option:selected").index() == 0){
-			$('#tipo2').parent().addClass('has-error');
-			$('#tipo2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#tipo2').parent().removeClass('has-error').addClass('has-success');
-		};
-		if ($("#departamneto2").val() == ''){
-			$('#departamneto2').parent().addClass('has-error');
-			$('#departamneto2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#departamneto2').parent().removeClass('has-error').addClass('has-success');
-		}
-		if ($("#horario2").val() == ''){
-			$('#horario2').parent().addClass('has-error');;
-			$('#horario2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#horario2').parent().removeClass('has-error').addClass('has-success');
-		};	
-		if ($("#descripcion2").val() == ''){
-			$('#descripcion2').parent().addClass('has-error');;
-			$('#descripcion2').attr('placeholder','Campo Obligatorio');			
-			return false;				
-		}else{
-			$('#descripcion2').parent().removeClass('has-error').addClass('has-success');
-		};
-		id = $('#id').val();
-		tipo = $('#tipo2').val();
-		departamento = $('#departamento2').val();
-		horario = $('#horario2').val();
-		descripcion = $('#descripcion2').val();
-		$('#editar').bPopup().close();
-		bootbox.confirm('¿Seguro que desea Editar la Agencia?', function(result){
-			if (result == true){
-				$.post('include/pdo/agencia.php', {function:"editAgency", id:id, tipo:tipo, departamento:departamento, horario:horario, descripcion:descripcion}, function(data){
-					if (data  == '0'){
-						$('#error').html('<strong>¡Error!</strong> Error al Editar la Agencia, Intente mas tarde').$('#error').fadeIn(1000).fadeOut(5000);												
-					}else if (data == '1'){
-						$('#mensaje').html('<strong>¡Exito!</strong> Agencia Editada Correctamente').fadeIn(1000).fadeOut(5000);
-						$('#codigo2').val('');
-						$('#horario2').val('');
-						$('#descripcion2').val('');
-						$('#lista').DataTable().ajax.reload();
-					}//End if
-				});//End post	
-			}else{
-			$('#editar').bPopup();
-			}//End if			 
-		});//End Function		
+		if (validateForm('#editar')){
+			id = $('#id').val();
+			tipo = $('#tipo2').val();
+			departamento = $('#departamento2').val();
+			horario = $('#horario2').val();
+			descripcion = $('#descripcion2').val();
+			$('#editar').bPopup().close();
+			bootbox.confirm('¿Seguro que desea Editar la Agencia?', function(result){
+				if (result == true){
+					$.post('include/pdo/agencia.php', {function:"editAgency", id:id, tipo:tipo, departamento:departamento, horario:horario, descripcion:descripcion}, function(data){
+						if (data  == '0'){
+							$('#error').html('<strong>¡Error!</strong> Error al Editar la Agencia, Intente mas tarde').$('#error').fadeIn(1000).fadeOut(5000);												
+						}else if (data == '1'){
+							$('#mensaje').html('<strong>¡Exito!</strong> Agencia Editada Correctamente').fadeIn(1000).fadeOut(5000);
+							$('#codigo2').val('');
+							$('#horario2').val('');
+							$('#descripcion2').val('');
+							$('#lista').DataTable().ajax.reload();
+						}//End if
+					});//End post	
+				}else{
+				$('#editar').bPopup();
+				}//End if			 
+			});//End Function
+		}//End Validate Format
 	});
 		
 //Cambiar el Estatus de la Agencia
@@ -302,7 +242,7 @@ $(document).ready(function(){
     <div align="center" class="alert alert-warning" id="alerta" style="display:none">
     	<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>        
     </div>
-   
+
     <div class="container-fluid">
     <div class="row">
     <div class="col-xs-12">
@@ -354,12 +294,12 @@ $(document).ready(function(){
     	<div class="panel-body">
            <input type="hidden" name="accion" value="nuevo">
            <div class="form-group col-xs-12 col-md-6 text-center">
-            	<label for="codigo">Código</label>
-            	<input type="text" name="codigo" id="codigo" class="form-control text-center uncopypaste" maxlength="3" style="text-transform:uppercase">                 	                
+            	<label for="codigo">* Código</label>
+            	<input type="text" name="codigo" id="codigo" class="form-control text-center uncopypaste" maxlength="3" style="text-transform:uppercase" required>                 	                
             </div>
 			<div class="form-group col-xs-12 col-md-6 text-center">
-				<label for="tipo">Tipo</label>
-               	<select name="tipo" id="tipo" class="form-control">
+				<label for="tipo">* Tipo</label>
+               	<select name="tipo" id="tipo" class="form-control" required>
                 	<option>Seleccionar...</option>
                     <option>Sucursal</option>
                     <option>Aliado</option>
@@ -367,18 +307,18 @@ $(document).ready(function(){
               	</select>                    
             </div>
             <div class="form-group col-xs-12 col-md-6 text-center">
-				<label for="departamneto">Departamento</label>
-               	<input name="departamneto" id="departamneto" type="text" size="40" maxlength="40" class="form-control  text-center">
+				<label for="departamento">* Departamento</label>
+               	<input name="departamento" id="departamento" type="text" size="40" maxlength="40" class="form-control  text-center" required>
             </div>
             <div class="form-group col-xs-12 col-md-6">
-				<label for="horario">Horario</label>
-                <select name="horario" id="horario" class="form-control">
-                                       
+				<label for="horario">* Horario</label>
+                <select name="horario" id="horario" class="form-control" required>
+                 	<option>Seleccionar...</option>                
                 </select>
             </div>
 			<div class="form-group col-xs-12 text-center">
-				<label for="descripcion">Descripción</label>
-               	<input type="text" name="descripcion" id="descripcion" size="40" maxlength="40" class="form-control text-center">
+				<label for="descripcion">* Descripción</label>
+               	<input type="text" name="descripcion" id="descripcion" size="40" maxlength="40" class="form-control text-center" required>
             </div>
 			<div class="form-group col-xs-12 text-center">
 				<input type="image" id="enviar" src="imagenes/save.png" title="Ingresar Agencia">
@@ -406,8 +346,8 @@ $(document).ready(function(){
                	<input name="codigo2" type="text" id="codigo2" size="3" maxlength="3" class="form-control  text-center" style="text-transform:uppercase" readonly>
             </div>
             <div class="form-group col-xs-12 col-md-6 text-center">
-				<label for="tipo2">Tipo</label>
-               	<select name="tipo2" id="tipo2" class="form-control">
+				<label for="tipo2">* Tipo</label>
+               	<select name="tipo2" id="tipo2" class="form-control" required>
                 	<option>Seleccionar...</option>
                     <option value="Sucursal">Sucursal</option>
                     <option value="Aliado">Aliado</option>
@@ -415,18 +355,18 @@ $(document).ready(function(){
               	</select>
            	</div>           
 			<div class="form-group col-xs-12 col-md-6 text-center">
-				<label for="departamento2">Departamento</label>
-               	<input name="departamento2" id="departamento2" type="text" size="40" maxlength="40" class="form-control  text-center">
+				<label for="departamento2">* Departamento</label>
+               	<input name="departamento2" id="departamento2" type="text" size="40" maxlength="40" class="form-control  text-center" required>
             </div>
             <div class="form-group col-xs-12 col-md-6 text-center">
-				<label for="horario2">Horario</label>
-               	<select name="horario2" id="horario2" class="form-control">
-                	
+				<label for="horario2">* Horario</label>
+               	<select name="horario2" id="horario2" class="form-control" required>
+                	<option>Seleccionar...</option>
                 </select>
             </div>
 			<div class="form-group col-xs-12 text-center">
-				<label for="descripcion2">Descripcion</label>
-               	<input name="descripcion2" type="text" id="descripcion2" size="40" maxlength="40" class="form-control  text-center">
+				<label for="descripcion2">* Descripcion</label>
+               	<input name="descripcion2" type="text" id="descripcion2" size="40" maxlength="40" class="form-control  text-center" required>
             </div>
 			<div class="form-group col-xs-12 text-center">
 				<input type="image" id="enviar2" src="imagenes/save.png" title="Editar Agencia">

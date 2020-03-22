@@ -14,6 +14,18 @@
 				}
 		    }		    
 		});
+		//Validate TextArea
+		$("textarea", $(div)).each(function (index) {
+			if($(this).prop('required')){
+		        if ($(this).val() == ''){
+					$(this).parent().addClass('has-error');
+					$(this).attr('placeholder','Campo Obligatorio');
+					validate = false;
+				}else{
+					$(this).parent().removeClass('has-error').addClass('has-success');
+				}
+		    }		    
+		});
 		//Validate Select
 		$("select", $(div)).each(function (index) {
 			if($(this).prop('required')){
@@ -26,8 +38,18 @@
 				}
 			}
 		});
-
 		return validate;
+	}
+
+	//Clear form
+	function clearForm(div){
+		//Clear TextBox
+		$("input", $(div)).val('').attr('placeholder','').parent().removeClass('has-error has-success');		
+		//Clear Select
+		$("select", $(div)).prop("selected", "selected");
+		$("select", $(div)).parent().removeClass('has-error has-success');
+		//Clear Select
+		$("textarea", $(div)).val('').attr('placeholder','').parent().removeClass('has-error has-success');
 	}
 
 	// Function Show and hide buttons report
