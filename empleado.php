@@ -11,8 +11,8 @@ if(isset($_SESSION['user']) && ($nivel < 2)){
 <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="../DataTables/css/dataTables.bootstrap.css">
 <link rel="stylesheet" href="../DataTables/css/responsive.bootstrap.min.css">
-<link rel="stylesheet" href="../DataTables/css/buttons.dataTables.min.css"> 
 <link rel="stylesheet" href="../bootstrap/css/bootstrap-submenu.css">
+<link rel="stylesheet" href="../DataTables/css/buttons.dataTables.min.css"> 
 <link rel="stylesheet" href="../css/jquery-ui.css" type="text/css" media="all" />
 <link rel="stylesheet" href="css/comercial.css">
 <link rel="stylesheet" href="css/chat.css">
@@ -70,15 +70,28 @@ $(document).ready(function(){
 //Función para buscar el autocompletado de Supervisor
 	$(function(){
 		$('#supervisor, #supervisor2').autocomplete({
-			minLength: 3,
-			source : 'include/buscar_supervisor.php',
+			minLength: 5,
+			source: function( request, response ) {
+			   	// Fetch data
+			   	$.ajax({
+			    	url: "include/pdo/empleado.php",
+			    	type: 'post',
+			    	dataType: "json",
+			    	data: {
+			     		function:"autocompleteSupervisor",
+			     		supervisor: request.term
+			    	},
+			    	success: function( data ) {
+			     		response(data);
+			    	}
+			   	});
+		  	},
 			select : function(event, ui){
 				$('#resultados').slideUp('slow', function(){
-					$('#resultados').html(
-				 );
-		});
-		$('#resultados').slideDown('slow');
-		} 
+					$('#resultados').html();
+				});
+				$('#resultados').slideDown('slow');
+			} 
 		});
 	});
 
@@ -86,14 +99,27 @@ $(document).ready(function(){
 	$(function(){
 		$('#zonares, #zonares2').autocomplete({
 			minLength: 3,
-			source : 'include/buscar_zona.php',
+			source: function( request, response ) {
+			   	// Fetch data
+			   	$.ajax({
+			    	url: "include/pdo/empleado.php",
+			    	type: 'post',
+			    	dataType: "json",
+			    	data: {
+			     		function:"autocompleteZonares",
+			     		zonares: request.term
+			    	},
+			    	success: function( data ) {
+			     		response(data);
+			    	}
+			   	});
+		  	},
 			select : function(event, ui){
 				$('#resultados').slideUp('slow', function(){
-					$('#resultados').html(
-				 );
-		});
-		$('#resultados').slideDown('slow');
-		} 
+					$('#resultados').html();
+				});
+				$('#resultados').slideDown('slow');
+			} 
 		});
 	});
 
@@ -101,32 +127,58 @@ $(document).ready(function(){
 	$(function(){
 		$('#instruccion, #instruccion2').autocomplete({
 			minLength: 3,
-			source : 'include/buscar_grado.php',
+			source: function( request, response ) {
+			   	// Fetch data
+			   	$.ajax({
+			    	url: "include/pdo/empleado.php",
+			    	type: 'post',
+			    	dataType: "json",
+			    	data: {
+			     		function:"autocompleteInstruccion",
+			     		instruccion: request.term
+			    	},
+			    	success: function( data ) {
+			     		response(data);
+			    	}
+			   	});
+		  	},
 			select : function(event, ui){
 				$('#resultados').slideUp('slow', function(){
-					$('#resultados').html(
-				 );
+					$('#resultados').html();
+				});
+				$('#resultados').slideDown('slow');
+			} 
 		});
-		$('#resultados').slideDown('slow');
-		} 
-		});
-	});
+	});	
 
 //Función para buscar el autocompletado de Grado de Titulo
 	$(function(){
 		$('#titulo, #titulo2').autocomplete({
 			minLength: 3,
-			source : 'include/buscar_titulo.php',
+			source: function( request, response ) {
+			   	// Fetch data
+			   	$.ajax({
+			    	url: "include/pdo/empleado.php",
+			    	type: 'post',
+			    	dataType: "json",
+			    	data: {
+			     		function:"autocompleteTitulo",
+			     		titulo: request.term
+			    	},
+			    	success: function( data ) {
+			     		response(data);
+			    	}
+			   	});
+		  	},
 			select : function(event, ui){
 				$('#resultados').slideUp('slow', function(){
-					$('#resultados').html(
-				 );
-		});
-		$('#resultados').slideDown('slow');
-		} 
+					$('#resultados').html();
+				});
+				$('#resultados').slideDown('slow');
+			} 
 		});
 	});
-
+	
 //Mostrar Formulario de Nuevo Empleado
 	$('#newUser').click(function(){
 		$('#nuevo').bPopup();		

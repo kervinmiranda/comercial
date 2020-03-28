@@ -217,6 +217,42 @@ if(isset($_SESSION['user'])){
 		return $result;
 	}
 
+	// Serach Super
+	function autocomplete($value, $campo){
+		$objdatabase = new Database();
+		switch ($campo) {
+			case 'supervisor':
+				$sql = $objdatabase->prepare("SELECT DISTINCT supervisor FROM comercial_plantilla WHERE supervisor LIKE ? ORDER BY supervisor");
+				break;
+			case 'zonares':
+				$sql = $objdatabase->prepare("SELECT DISTINCT zonares FROM comercial_plantilla WHERE zonares LIKE ? ORDER BY zonares");
+				break;
+			case 'instruccion':
+				$sql = $objdatabase->prepare("SELECT DISTINCT instruccion FROM comercial_plantilla WHERE instruccion LIKE ? ORDER BY instruccion");
+				break;
+			case 'titulo':
+				$sql = $objdatabase->prepare("SELECT DISTINCT titulo FROM comercial_plantilla WHERE titulo LIKE ? ORDER BY titulo");
+				break;
+			default:
+				# code...
+				break;
+		}
+		$sql->bindValue(1,"%{$value}%", PDO::PARAM_STR);
+		$sql->execute(); // se confirma que el query exista	
+		//Verificamos el resultado
+		$count = $sql->rowCount();
+		if ($count){
+			$json = array();
+			$result = $sql->fetchAll();
+			foreach ($result as $key => $value){
+				$json[] = array("value" => $value[$campo]);
+			}
+			$json['success'] = true;
+			echo json_encode($json);
+		}
+		$objdatabase = null;
+	}
+
 	if (isset($_POST['function'])){
 		$function  = $_POST['function']; //Obtener la Opción a realizar
 		switch ($function) {
@@ -237,6 +273,18 @@ if(isset($_SESSION['user'])){
 				break;
 			case "getCargos":
 				echo json_encode(getCargos());
+				break;
+			case "autocompleteSupervisor":
+				autocomplete($_POST['supervisor'], 'supervisor');
+				break;
+			case "autocompleteZonares":
+				autocomplete($_POST['zonares'], 'zonares');
+				break;
+			case "autocompleteInstruccion":
+				autocomplete($_POST['instruccion'], 'instruccion');
+				break;
+			case "autocompleteTitulo":
+				autocomplete($_POST['titulo'], 'titulo');
 				break;
 			default:
 				break;
