@@ -11,17 +11,18 @@ if(isset($_SESSION['user']) && ($nivel < 2)){
 <link rel="stylesheet" href="../bootstrap/css/bootstrap.css">
 <link rel="stylesheet" href="../DataTables/css/dataTables.bootstrap.css">
 <link rel="stylesheet" href="../DataTables/css/responsive.bootstrap.min.css">
-<link rel="stylesheet" href="../bootstrap/css/bootstrap-submenu.css">
 <link rel="stylesheet" href="../DataTables/css/buttons.dataTables.min.css"> 
-<link rel="stylesheet" href="../css/jquery-ui.css" type="text/css" media="all" />
+<link rel="stylesheet" href="../bootstrap/css/bootstrap-submenu.css">
+<link rel="stylesheet" href="../bootstrap/css/bootstrap-datepicker.css">
 <link rel="stylesheet" href="css/comercial.css">
 <link rel="stylesheet" href="css/chat.css">
 <!-- Archivos JavaScript -->	
 <script src="../js/jquery.js"></script>
-<script src="../js/jquery-ui.js"></script>
+<script src="js/jquery.bpopup.min.js"></script>
 <script src="../bootstrap/js/bootstrap.js"></script>
 <script src="../DataTables/js/jquery.dataTables.js"></script>
 <script src="../DataTables/js/dataTables.bootstrap.js"></script>
+<script src="../DataTables/js/dataTables.select.js"></script>
 <script src="../DataTables/js/dataTables.responsive.min.js"></script>
 <script src="../DataTables/js/dataTables.buttons.min.js"></script>
 <script src="../DataTables/js/buttons.flash.min.js"></script>
@@ -31,8 +32,9 @@ if(isset($_SESSION['user']) && ($nivel < 2)){
 <script src="../DataTables/js/buttons.html5.min.js"></script>
 <script src="../DataTables/js/buttons.print.min.js"></script>
 <script src="../bootstrap/js/bootstrap-submenu.js"></script>
-<script src="js/jquery.bpopup.min.js"></script>
 <script src="../bootstrap/js/bootbox.min.js"></script>
+<script src="../bootstrap/js/bootstrap-datepicker.js"></script>
+<script src="../bootstrap/js/locale/bootstrap-datepicker.es.js"></script>
 <script src="../js/jquery.numeric.js"></script>
 <script src="js/libreriajs.js"></script>
 <script src="js/chat.js"></script>
@@ -48,23 +50,35 @@ $(document).ready(function(){
 
 //Campos fecha
 	$('#fingreso').datepicker({
-		dateFormat: 'dd/mm/yy',
-		maxDate: 0, minDate:'-2M'		
+		language: "es",
+	  	format: "dd/mm/yyyy",
+	  	endDate: new Date(),
+	  	autoclose: true,
+	    todayBtn:  1
 	});
 	
 	$('#fingreso2').datepicker({
-		dateFormat: 'dd/mm/yy',
-		maxDate: '0'		
+		language: "es",
+	  	format: "dd/mm/yyyy",
+	  	endDate: new Date(),
+	  	autoclose: true,
+	    todayBtn:  1		
 	});
 
 	$('#fcambio').datepicker({
-		dateFormat: 'dd/mm/yy',
-		maxDate: 0, minDate:'-2M'		
+		language: "es",
+	  	format: "dd/mm/yyyy",
+	  	endDate: new Date(),
+	  	autoclose: true,
+	    todayBtn:  1	
 	});
 	
 	$('#fcambio2').datepicker({
-		dateFormat: 'dd/mm/yy',
-		maxDate: 0		
+		language: "es",
+	  	format: "dd/mm/yyyy",
+	  	endDate: new Date(),
+	  	autoclose: true,
+	    todayBtn:  1	
 	});
 	
 //Función para buscar el autocompletado de Supervisor

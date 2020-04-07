@@ -3,12 +3,7 @@
 setlocale(LC_TIME, 'es_RB'); # Localiza en español es_Venezuela
 date_default_timezone_set('America/Caracas');
 //Variables:
-$doctype = '<!DOCTYPE html PUBLIC "Sistema Gebnet2>
-<html lang="es">
-<head>
-<title>Gebnet</title>
-<link rel="shortcut icon" href="favicon.ico">
-<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" charset="UTF-8">';
+$doctype = '<!DOCTYPE html PUBLIC "Sistema Gebnet"><html lang="es"><head><title>Gebnet</title><link rel="shortcut icon" href="favicon.ico"><meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" charset="UTF-8">';
 $titulo = '<h4><b>Gebnet</b></h4>Comercialización'; //Título del Sistema
 $pestana = 'Gebnet';//Titulo de la pestaña
 $imagen='<img src="imagenes/libertylogo.png">';// Logo de la cabecera

@@ -34,8 +34,23 @@ if(isset($_SESSION['user'])){
 			$data = $sql->fetchAll();				
 		}
 		$objdatabase = null;
-		$results = array("aaData"=>$data);
-		echo json_encode($results);
+		return $data;		
+	}
+
+	// Get Emplouyees by agencie
+	function getEmployeesByAgencie($agencia){
+		$objdatabase = new Database();
+		$sql = $objdatabase->prepare("SELECT agencia, ci, nombre, apellido, cargo FROM comercial_plantilla WHERE agencia = :agencia AND estatus = '1'");
+		//Definimos los parametros de la Query
+		$sql->bindParam(':agencia', $agencia, PDO::PARAM_STR);
+		$sql->execute();//Exjecutamos la Query		
+		$count = $sql->rowCount();//Verificamos el resultado
+		$data = null;		
+		if($count){
+			$data = $sql->fetchAll();				
+		}
+		$objdatabase = null;
+		return $data;
 	}
 
 	// Insert Employee
@@ -256,8 +271,13 @@ if(isset($_SESSION['user'])){
 	if (isset($_POST['function'])){
 		$function  = $_POST['function']; //Obtener la Opción a realizar
 		switch ($function) {
+			case "getEmployees":
+				$results = array("aaData"=>getEmployees());
+				echo json_encode($results);	
+				break;			
 			case "getAllEmployees":
-				getAllEmployees();
+				$results = array("aaData"=>getAllEmployees());
+				echo json_encode($results);				
 				break;
 			case "getEmployee":
 				echo json_encode(getEmployee($_POST['cedula']));
@@ -267,6 +287,10 @@ if(isset($_SESSION['user'])){
 				break;
 			case "insertEmployee":
 				echo insertEmployee($_POST['cedula'], $_POST['nombre'], $_POST['apellido'], $_POST['cargo'], $_POST['ingreso'], $_POST['departamento'], $_POST['razon'], $_POST['agencia'], $_POST['telefono'], $_POST['correo'], $_POST['turno'], $_POST['supervisor'], $_POST['hijos'], $_POST['zonares'], $_POST['direccion'], $_POST['observacion'], $_POST['estudio'], $_POST['instruccion'], $_POST['titulo'], $_POST['userlib'], $_POST['cajafact'], $_POST['fcambio']);
+				break;
+			case "getEmployeesByAgencie":
+				$results = array("aaData"=>getEmployeesByAgencie($_POST['agencia']));
+				echo json_encode($results);		
 				break;
 			case "statusEmployee":
 				echo statusEmployee($_POST['cedula']);

@@ -41,6 +41,20 @@
 		return validate;
 	}
 
+	//Recorrer inputs radio para cargar asistencia
+	function getAsistencia(div){
+		var asistencia = new Array();
+		$("input[type=radio]", $(div)).each(function (index) {
+			if( $(this).is(':checked') ){
+				var cedula = $(this).attr('name').replace('EMP','');
+				var emp = new Array(cedula, $(this).val(), $('#OBS'+cedula).val());
+		        //alert ($(this).attr('name').replace('EMP','')  + ' ' + $(this).val());
+		        asistencia.push(emp);
+		    }			
+		});
+		return asistencia;
+	}
+
 	//Clear form
 	function clearForm(div){
 		//Clear TextBox

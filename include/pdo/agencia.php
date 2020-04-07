@@ -102,6 +102,74 @@ if(isset($_SESSION['user'])){
 		return $data;
 	}
 
+	// Load Assistance List
+	function loadAssistance(){
+		$fecha = date('Y-m-d');
+		$objdatabase = new Database();
+		$nivel = $_SESSION['nivel'];		
+		switch ($nivel) {			
+			case '1':
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' AND agencia NOT IN(SELECT agencia FROM comercial_asistencia WHERE fecha = :fecha) ORDER BY agencia");				
+				break;
+			case '2':
+				$departamento = $_SESSION['departamento'];
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' AND departamento =:departamento AND agencia NOT IN(SELECT agencia FROM comercial_asistencia WHERE fecha = :fecha) ORDER BY agencia ");
+				$sql->bindParam(':departamento', $departamento, PDO::PARAM_STR);
+				break;
+			case '3':
+				$agencia = $_SESSION['agencia'];
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' AND codigo =:agencia AND agencia NOT IN(SELECT agencia FROM comercial_asistencia WHERE fecha = :fecha) ORDER BY agencia");
+				$sql->bindParam(':agencia', $agencia, PDO::PARAM_STR);
+				break;
+			default:
+				# code...
+				break;
+		}
+		$sql->bindParam(':fecha', $fecha, PDO::PARAM_STR);
+		$sql->execute(); //Exjecutamos la Query
+		$count = $sql->rowCount(); // se confirma que el query exista	
+		$data = null;		
+		if($count){
+			$data = $sql->fetchAll();			
+		}
+		$objdatabase = null;
+		return $data;
+	}
+
+	// Load Assistance List
+	function loadAllAgencies(){
+		$fecha = date('Y-m-d');
+		$objdatabase = new Database();
+		$nivel = $_SESSION['nivel'];
+		switch ($nivel) {			
+			case '1':
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' ORDER BY agencia");				
+				break;
+			case '2':
+				$departamento = $_SESSION['departamento'];
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' AND departamento =:departamento ORDER BY agencia");
+				$sql->bindParam(':departamento', $departamento, PDO::PARAM_STR);
+				break;
+			case '3':
+				$agencia = $_SESSION['agencia'];
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' AND codigo =:agencia ORDER BY agencia");
+				$sql->bindParam(':agencia', $agencia, PDO::PARAM_STR);
+				break;
+			default:
+				# code...
+				break;
+		}
+		$sql->bindParam(':fecha', $fecha, PDO::PARAM_STR);
+		$sql->execute(); //Exjecutamos la Query
+		$count = $sql->rowCount(); // se confirma que el query exista	
+		$data = null;		
+		if($count){
+			$data = $sql->fetchAll();			
+		}
+		$objdatabase = null;
+		return $data;
+	}	
+
 	// Search By Name
 	function searchByName($codigo){
 		$objdatabase = new Database();
@@ -190,6 +258,11 @@ if(isset($_SESSION['user'])){
 			case "getHorario":
 				echo json_encode(getHorario());
 				break;
+			case "loadAssistance":
+				echo json_encode(loadAssistance());
+				break;
+			case "loadAllAgencies":
+				echo json_encode(loadAllAgencies());
 			default:
 				break;
 		}
