@@ -52,13 +52,7 @@ if(isset($_SESSION['user'])){
 	$plantilla_a = '<li id="menu3" class="dropdown"><!-- Menú Plantilla -->
         			<a tabindex="0" data-toggle="dropdown" data-submenu="" aria-expanded="false">Plantilla de Personal<span class="caret"></span></a>
         				<ul class="dropdown-menu">
-          					<li class="dropdown-submenu"><a tabindex="0">Asistencia</a>
-                            	<ul class="dropdown-menu">
-                                    <li><a href="plantilla" tabindex="0">Carga</a></li>              					
-                                    <li><a href="asistencia" tabindex="0">Consulta</a></li>
-									<li><a href = "exportarasistencia" tabindex="0">Exportar</a></li>            					
-            					</ul>                        
-          					</li>
+          					<li><a href="asistencia">Asistencia</a></li>
                             <li class="dropdown-submenu"><a tabindex="0">Solicitudes</a>
                             	<ul class="dropdown-menu">
                                     <li><a href="solicitud" tabindex="0">Carga</a></li>              					
@@ -71,12 +65,7 @@ if(isset($_SESSION['user'])){
 	$plantilla_u = '<li id="menu3" class="dropdown"><!-- Menú Plantilla -->
         			<a tabindex="0" data-toggle="dropdown" data-submenu="" aria-expanded="false">Plantilla de Personal<span class="caret"></span></a>
         				<ul class="dropdown-menu">
-          					<li class="dropdown-submenu"><a tabindex="0">Asistencia</a>
-                            	<ul class="dropdown-menu">
-                                    <li><a href="plantilla" tabindex="0">Carga</a></li>              					
-                                    <li><a href="asistencia" tabindex="0">Consulta</a></li>								           					
-            					</ul>                        
-          					</li>
+          					<li><a href="asistencia">Asistencia</a></li>
                             <li class="dropdown-submenu"><a tabindex="0">Solicitudes</a>
                             	<ul class="dropdown-menu">
                                     <li><a href="solicitud" tabindex="0">Carga</a></li>              					

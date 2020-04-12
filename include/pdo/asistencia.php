@@ -79,6 +79,30 @@ if(isset($_SESSION['user'])){
 		return $result;
 	}
 
+	//Edit Assistence
+	function editAssist($detalle, $cedula, $asistencia, $observacion){
+		$edicion = date('Y-m-d H:i:s');
+		$editor = $_SESSION['username'];
+		$objdatabase = new Database();
+		$sql = $objdatabase->prepare("UPDATE comercial_asistencia_detalle SET asistencia =:asistencia, observacion =:observacion, edicion =:edicion, editor =:editor WHERE id =:detalle AND empleado =:cedula");
+		//Definimos los parametros de la Query		$
+		$sql->bindParam(':asistencia', $asistencia, PDO::PARAM_STR);
+		$sql->bindParam(':observacion', $observacion, PDO::PARAM_STR);
+		$sql->bindParam(':edicion', $edicion, PDO::PARAM_STR);
+		$sql->bindParam(':editor', $editor, PDO::PARAM_STR);
+		$sql->bindParam(':detalle', $detalle, PDO::PARAM_STR);
+		$sql->bindParam(':cedula', $cedula, PDO::PARAM_STR);
+		$sql->execute(); // se confirma que el query existas		
+		$count = $sql->rowCount();//Verificamos el resultado
+		if ($count){
+		   $data = "1";
+		} else {
+		   $data = "0";
+		}		
+		return $data;
+	}
+	
+
 	if (isset($_POST['function'])){
 		$function  = $_POST['function']; //Obtener la Opción a realizar (Nuevo, editar, bloquear)
 		switch ($function) {
@@ -91,6 +115,9 @@ if(isset($_SESSION['user'])){
 				break;
 			case "getAsistenciaById":
 				echo json_encode(getAsistenciaById($_POST['detalle'], $_POST['cedula']));	
+				break;
+			case "editAssist":
+				echo editAssist($_POST['detalle'], $_POST['cedula'], $_POST['asistencia'], $_POST['observacion']);
 				break;
 			default:
 				break;

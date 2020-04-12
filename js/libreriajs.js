@@ -90,7 +90,7 @@
 			var buttons = [];
 		}
 		return buttons;
-	}
+	}	
 
 // Función para validar entradas (Keypress)
 	function validar(key, campo, formato){
@@ -201,6 +201,9 @@
 	}//End Function
 
 $(document).ready(function(){
+
+$("body").tooltip({ selector: '[data-toggle=tooltip]' });
+
 //Buscar Notificaciones
 function notificacion(){
 	$.post("include/pdo/notificacion.php",{function:"getNotifications"},function(data){

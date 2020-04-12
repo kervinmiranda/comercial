@@ -43,10 +43,11 @@ $(document).ready(function(){
 
 	var nivel = <?php echo $_SESSION['nivel']?>;
 	var nombreAgencia;
-	var agencia = "-";
+	var agencia = "BNS";
 	var agenciaConsulta = "-";
 	var desde = new Date();
 	var hasta = new Date();
+	var detalle;
 
 	fillAgencies();
 	fillAllAgencies();
@@ -59,11 +60,11 @@ $(document).ready(function(){
 		agencia = $(this).val();
 		nombreAgencia = $(this).attr('title');
 		$('#agencia').html(nombreAgencia);
-		$('#formulario').fadeOut(500);
 		$('#comentario').val('');
-		$('#lista').dataTable().fnClearTable();
+		$('#formulario').fadeOut(500);
 		$('#lista').DataTable().ajax.reload();
 		$('#formulario').fadeIn(500);
+		$('#lista').DataTable().responsive.recalc().columns.adjust();
 	});
 
 //Buscar Plantilla de Agencia
@@ -71,7 +72,6 @@ $(document).ready(function(){
 		agenciaConsulta = $(this).val();
 		nombreAgencia = $(this).attr('title');
 		$('#agenciaconsulta').html(nombreAgencia);
-		$('#listaConsulta').dataTable().fnClearTable();
 		validateSearch();
 	});
 
@@ -87,7 +87,6 @@ $(document).ready(function(){
 	    var minDate = new Date(selected.date.valueOf());
 	    $('#hasta').datepicker('setStartDate', minDate);
 	    desde = $(this).val();
-	    $('#listaConsulta').dataTable().fnClearTable();
 	    validateSearch();
 	});
 
@@ -130,7 +129,7 @@ $(document).ready(function(){
 //Mostrar Formulario de editar Asistencia
 	$('#listaConsulta tbody').on('click', '.edit', function(){	
 		var element = $(this).attr('id').split('_');
-		var detalle = element[0];
+		detalle = element[0];
 		var cedula = element[1];		
 		$.post('include/pdo/asistencia.php', {function:"getAsistenciaById", detalle:detalle, cedula:cedula}, function(data){
 			var obj = jQuery.parseJSON(data);
@@ -142,9 +141,39 @@ $(document).ready(function(){
 		});//End post				
 		$('#editar').bPopup();
 	});
+
+//Validar y editar
+	$('#enviar').click(function(){
+		if (validateForm('#editar')){
+			$('#editar').bPopup().close();
+			bootbox.confirm('¿Seguro que desea editar la asistencia?', function(result){
+				if (result == true){
+					var asistencia = getAsistencia('#formulario');
+					var comentario = $('#comentario').val();
+					var cedula = $('#cedula').val();
+					var asistencia = $('#asistenciaEdit').val();
+					var observacion = $('#observacion').val();
+					$.post("include/pdo/asistencia.php", {function: "editAssist", detalle:detalle, cedula:cedula, asistencia:asistencia, observacion:observacion}, function(data){
+						if (data == '1'){
+							$('#mensaje').html('<strong>¡Exito!</strong> Asistencia Editada Correctamente').fadeIn(1000).fadeOut(15000);
+							$('#formularioConsulta').fadeOut(500);
+							$('#listaConsulta').dataTable().fnClearTable();
+							validateSearch();
+							$('#formularioConsulta').fadeIn(500);
+						}else{
+							$('#error').html('<strong>¡Error!</strong> Error al editar la asistencia, Intente mas tarde.').fadeIn(1000).fadeOut(15000);
+						}
+					});//End post
+				}else{
+					$('#editar').bPopup();
+				}
+			});// End Function boot.confirm
+		}	
+	});//End Fucntion
 	
-	//Convertir la tabla en Datatable
+//Convertir la tabla en Datatable
 	$('#lista').dataTable({
+		"responsive":true,
 		"ajax": {
 		    "url": "include/pdo/empleado.php",
 		    "type": "POST",
@@ -195,6 +224,7 @@ $(document).ready(function(){
 
 //Convertir la tabla en Datatable
 	$('#listaConsulta').dataTable({
+		"responsive":true,
 		"ajax": {
 		    "url": "include/pdo/asistencia.php",
 		    "type": "POST",
@@ -232,7 +262,7 @@ $(document).ready(function(){
 			if (data != 0){
 			var json = jQuery.parseJSON(data);		
 				$.each(json, function(idx, obj) {
-					$('#agencias').append('<label><input type="radio" name="agencia" id = "' + obj.descripcion +'" value="' + obj.agencia + '" class="radioGroup" title = "' + obj.descripcion + '" required>' + obj.agencia + '</label> ');
+					$('#agencias').append('<label class="btn btn-primary btn-sm" data-toggle="tooltip" title = "' + obj.descripcion + '"><input type="radio" name="agencia" id = "' + obj.descripcion +'" value="' + obj.agencia + '" class="radioGroup" title = "' + obj.descripcion + '" required>' + obj.agencia + '</label> ');
 				})
 			}else{
 				$('#agencias').append('<div class="alert alert-warning text-center"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>¡Info!</strong> No hay Plantillas para cargar la asistencia</div>');
@@ -246,9 +276,9 @@ $(document).ready(function(){
 			if (data != 0){
 			var json = jQuery.parseJSON(data);		
 				$.each(json, function(idx, obj) {
-					$('#agenciasTodas').append('<label><input type="radio" name="agenciaConsulta" id = "' + obj.descripcion +'_2" value="' + obj.agencia + '" class="radioGroup" title = "' + obj.descripcion + '" required>' + obj.agencia + '</label> ');
+					$('#agenciasTodas').append('<label class="btn btn-primary btn-sm" data-toggle="tooltip" title = "' + obj.descripcion + '"><input type="radio" name="agenciaConsulta" id = "' + obj.descripcion +'_2" value="' + obj.agencia + '" class="radioGroup" title = "' + obj.descripcion + '" required>' + obj.agencia + '</label> ');
 				});
-				$('#agenciasTodas').append('<label><input type="radio" name="agenciaConsulta" id = "AllAgencies" value="TODAS" class="radioGroup" title = "TODAS" required>TODAS</label> ');
+				$('#agenciasTodas').append('<label class="btn btn-primary btn-sm" data-toggle="tooltip" title = "Todas"><input type="radio" name="agenciaConsulta" id = "AllAgencies" value="TODAS" class="radioGroup" title = "TODAS" required>TODAS</label> ');
 			}else{
 				$('#agenciasTodas').append('<div class="alert alert-warning text-center"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>¡Info!</strong> No hay Plantillas para cargar la asistencia</div>');
 			}
@@ -256,12 +286,13 @@ $(document).ready(function(){
 	}
 
 	function validateSearch(){
-		if ($('#desde').val()!='' && $('#hasta').val()!=''){			
-			$('#listaConsulta').DataTable().ajax.reload();
-			$('#formularioConsulta').fadeOut(500);
-			$('#formularioConsulta').fadeIn(500);
-		}
 		$('#listaConsulta').dataTable().fnClearTable();
+		if ($('#desde').val()!='' && $('#hasta').val()!='' && agenciaConsulta != "-"){			
+			$('#formularioConsulta').fadeOut(500);
+			$('#listaConsulta').DataTable().ajax.reload();
+			$('#formularioConsulta').fadeIn(500);
+			$('#listaConsulta').DataTable().responsive.recalc().columns.adjust();			
+		}		
 	}
 
 	//Borrar filtro de fechas
@@ -309,9 +340,7 @@ $(document).ready(function(){
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="cargar">
 				<div class="container-fluid">
-				    <div class="row">
-					    <div class="col-xs-12 text-center" id="agencias"></div>
-					</div>
+				    <div class="btn-group btn-group-toggle text-center" data-toggle="buttons" id="agencias"></div>
 				</div>	    
 			    <form name="asistencia" id="asistencia">
 				    <div class="container-fluid">					    
@@ -366,10 +395,8 @@ $(document).ready(function(){
 			</div>
 			<div role="tabpanel" class="tab-pane" id="consulta">
 				<div class="container-fluid">
-				    <div class="row">
-					    <div class="col-xs-12 text-center" id="agenciasTodas"></div>
-					</div>
-
+				    <div class="btn-group btn-group-toggle text-center" data-toggle="buttons" id="agenciasTodas"></div>
+					
 					<div class="row">
 						<div class="form-group col-xs-12 col-md-3 col-md-offset-3 col-lg-2 col-lg-offset-4 text-center">
 					        <label>Desde</label>
@@ -391,53 +418,54 @@ $(document).ready(function(){
 					        </div>
 					    </div>
 					</div>
+				</div>
 
-				    <div class="row oculto" id="formularioConsulta">	
-				    	<div class="text-center">
-					    	<h4 id="agenciaconsulta"></h4>
-					    </div>
-					    <div class="col-xs-12">
-						    <table id="listaConsulta" class="table table-striped table-bordered text-center dt-responsive table-hover nowrap" cellspacing="0" width="100%">
-						    	<thead>
-							        <tr>
-							          <th>Fecha</th>
-							            <th>Agencia</th>
-							            <th>CI</th>
-							            <th>Nombre</th>
-							            <th>Apellido</th>
-							            <th>Cargo</th>
-							            <th>Asistencia</th>
-							            <th>Observación</th>
-							            <?php
-										if ($nivel < 2){
-											echo "<th>Editar</th>";
-											}			
-										?>      
-							        </tr>
-							    </thead>
-							  	<tfoot>        
-							        <tr>
-							          <th>Fecha</th>
-							            <th>Agencia</th>
-							            <th>CI</th>
-							            <th>Nombre</th>
-							            <th>Apellido</th>
-							            <th>Cargo</th>
-							            <th>Asistencia</th>
-							            <th>Observación</th>
-							            <?php
-										if ($nivel < 2){
-											echo "<th>Editar</th>";
-											}
-										?>	   
-							        </tr>
-								</tfoot>
-							    <tbody>    
-							    </tbody>
-							</table>
-						</div>
+			    <div class="row oculto" id="formularioConsulta">	
+			    	<div class="text-center">
+				    	<h4 id="agenciaconsulta"></h4>
+				    </div>
+				    <div class="col-xs-12">
+					    <table id="listaConsulta" class="table table-striped table-bordered text-center dt-responsive table-hover nowrap" cellspacing="0" width="100%">
+					    	<thead>
+						        <tr>
+						          <th>Fecha</th>
+						            <th>Agencia</th>
+						            <th>CI</th>
+						            <th>Nombre</th>
+						            <th>Apellido</th>
+						            <th>Cargo</th>
+						            <th>Asistencia</th>
+						            <th>Observación</th>
+						            <?php
+									if ($nivel < 2){
+										echo "<th>Editar</th>";
+										}			
+									?>      
+						        </tr>
+						    </thead>
+						  	<tfoot>        
+						        <tr>
+						          <th>Fecha</th>
+						            <th>Agencia</th>
+						            <th>CI</th>
+						            <th>Nombre</th>
+						            <th>Apellido</th>
+						            <th>Cargo</th>
+						            <th>Asistencia</th>
+						            <th>Observación</th>
+						            <?php
+									if ($nivel < 2){
+										echo "<th>Editar</th>";
+										}
+									?>	   
+						        </tr>
+							</tfoot>
+						    <tbody>    
+						    </tbody>
+						</table>
 					</div>
-				</div>				
+				</div>
+								
 			</div>
 		</div>
 
@@ -451,7 +479,7 @@ $(document).ready(function(){
 		    	<div class="panel-body">
 		              <div class="form-group col-xs-12 col-md-6 text-center">
 		            	<label for="fecha">Fecha</label>
-		            	<input  type="text" name="fecha" id="fecha" style="text-transform:uppercase" class="form-control text-center" readonly>                 	                
+		            	<input  type="text" name="fecha" id="fecha" class="form-control text-center" readonly>                 	                
 		            </div>
 		            <div class="form-group col-xs-12 col-md-6 text-center">
 						<label for="agenciaEdit">Agencia</label>
@@ -459,15 +487,15 @@ $(document).ready(function(){
 		            </div>
 					<div class="form-group col-xs-12 col-md-6 text-center">
 						<label for="cedula">Cédula</label>
-		               	<input name="cedula" id="cedula" type="text" style="text-transform:uppercase" class="form-control text-center" readonly>
+		               	<input name="cedula" id="cedula" type="text" class="form-control text-center" readonly>
 		            </div>
 					<div class="form-group col-xs-12 col-md-6 text-center">
 						<label for="">Nombre y Apellido</label>
 		               	<input type="text" id="nombre" class="form-control text-center" readonly>
 		            </div>			
 					<div class="form-group col-xs-12 col-md-6 text-center">
-						<label for="asistencia">Asistencia</label>
-		               	<select name="asistencia" id="asistencia" class="form-control">
+						<label for="asistenciaEdit">Asistencia</label>
+		               	<select name="asistenciaEdit" id="asistenciaEdit" class="form-control" required>
 		                    <option>Seleccionar...</option>
 		                    <option value="ASI">Asistente (ASI)</option>
 		                    <option value="SSO">Ausente (SSO)</option>
@@ -480,7 +508,7 @@ $(document).ready(function(){
 		            </div>  
 					<div class="form-group col-xs-12 col-md-6 text-center">
 						<label for="observacion">Observación</label>
-		               	<textarea name="observacion" id="observacion" class="form-control"></textarea>
+		               	<textarea name="observacion" id="observacion" class="form-control" required></textarea>
 		            </div>         	
 					<div class="form-group col-xs-12 text-center">
 						<input name="enviar" type="image" id="enviar" src="imagenes/save.png" title="Editar Registro">

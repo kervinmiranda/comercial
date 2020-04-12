@@ -143,7 +143,7 @@ if(isset($_SESSION['user'])){
 		$nivel = $_SESSION['nivel'];
 		switch ($nivel) {			
 			case '1':
-				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' ORDER BY agencia");				
+				$sql = $objdatabase->prepare("SELECT DISTINCT agencia, descripcion FROM comercial_plantilla INNER JOIN comercial_agencia ON comercial_plantilla.agencia = comercial_agencia.codigo WHERE comercial_agencia.estatus = '1' ORDER BY agencia");		
 				break;
 			case '2':
 				$departamento = $_SESSION['departamento'];

@@ -39,15 +39,18 @@ if(isset($_SESSION['user'])){
 
 	// Get Emplouyees by agencie
 	function getEmployeesByAgencie($agencia){
+		$fecha = date('Y-m-d');//Obtener la fecha del día
 		$objdatabase = new Database();
-		$sql = $objdatabase->prepare("SELECT agencia, ci, nombre, apellido, cargo FROM comercial_plantilla WHERE agencia = :agencia AND estatus = '1'");
+		$sql = $objdatabase->prepare("SELECT age.descripcion, ci, nombre, apellido, cargo, DATEDIFF(:fecha, fecha_ingreso) as dias FROM comercial_plantilla pla
+			INNER JOIN comercial_agencia age ON pla.agencia = age.codigo WHERE pla.agencia =:agencia AND pla.estatus = '1'");
 		//Definimos los parametros de la Query
 		$sql->bindParam(':agencia', $agencia, PDO::PARAM_STR);
+		$sql->bindParam(':fecha', $fecha, PDO::PARAM_STR);
 		$sql->execute();//Exjecutamos la Query		
 		$count = $sql->rowCount();//Verificamos el resultado
 		$data = null;		
 		if($count){
-			$data = $sql->fetchAll();				
+			$data = $sql->fetchAll();	
 		}
 		$objdatabase = null;
 		return $data;
