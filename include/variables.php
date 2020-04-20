@@ -53,26 +53,14 @@ if(isset($_SESSION['user'])){
         			<a tabindex="0" data-toggle="dropdown" data-submenu="" aria-expanded="false">Plantilla de Personal<span class="caret"></span></a>
         				<ul class="dropdown-menu">
           					<li><a href="asistencia">Asistencia</a></li>
-                            <li class="dropdown-submenu"><a tabindex="0">Solicitudes</a>
-                            	<ul class="dropdown-menu">
-                                    <li><a href="solicitud" tabindex="0">Carga</a></li>              					
-                                    <li><a href="consulta" tabindex="0">Consulta</a></li>
-									<li><a href="historial" tabindex="0">Historial</a></li>             					
-            					</ul>                        
-          					</li>
+          					<li><a href="solicitud">Solicitudes</a></li>
 						</ul>
 				</li>';
 	$plantilla_u = '<li id="menu3" class="dropdown"><!-- Menú Plantilla -->
         			<a tabindex="0" data-toggle="dropdown" data-submenu="" aria-expanded="false">Plantilla de Personal<span class="caret"></span></a>
         				<ul class="dropdown-menu">
           					<li><a href="asistencia">Asistencia</a></li>
-                            <li class="dropdown-submenu"><a tabindex="0">Solicitudes</a>
-                            	<ul class="dropdown-menu">
-                                    <li><a href="solicitud" tabindex="0">Carga</a></li>              					
-                                    <li><a href="consulta" tabindex="0">Consulta</a></li>
-									<li><a href="historial" tabindex="0">Historial</a></li>             					
-            					</ul>                        
-          					</li>
+                            <li><a href="solicitud">Solicitudes</a></li>
 						</ul>
 				</li>';
 	}else{

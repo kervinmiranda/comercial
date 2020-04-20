@@ -14,10 +14,12 @@ if(isset($_SESSION['user']) && ($nivel < 2)){
 <link rel="stylesheet" href="../DataTables/css/buttons.dataTables.min.css"> 
 <link rel="stylesheet" href="../bootstrap/css/bootstrap-submenu.css">
 <link rel="stylesheet" href="../bootstrap/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="../css/jquery-ui.css" type="text/css" media="all" />
 <link rel="stylesheet" href="css/comercial.css">
 <link rel="stylesheet" href="css/chat.css">
 <!-- Archivos JavaScript -->	
 <script src="../js/jquery.js"></script>
+<script src="../js/jquery-ui.js"></script>
 <script src="js/jquery.bpopup.min.js"></script>
 <script src="../bootstrap/js/bootstrap.js"></script>
 <script src="../DataTables/js/jquery.dataTables.js"></script>
@@ -246,7 +248,7 @@ $(document).ready(function(){
 
 //Mostrar Formulario de editar Empleado
 	$('#lista tbody').on('click', '.edit', function(){
-	var cedula = $(this).attr('id');
+	var cedula = $(this).attr('cedula');
 		$.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
 			var obj = jQuery.parseJSON(data);
 			$('#ci2').val(obj.ci);
@@ -320,9 +322,8 @@ $(document).ready(function(){
 
 //Cambiar el estatus del Empleado
 	$('#lista tbody').on('click', '.camb', function(){	
-		var element = $(this).attr('id').split('│');
-		var cedula = element[0];
-		bootbox.confirm('¿Seguro que desea el cambiar el Estatus del Empleado?', function(result){
+		var cedula = $(this).attr('cedula');
+			bootbox.confirm('¿Seguro que desea el cambiar el Estatus del Empleado?', function(result){
 			if (result == true){
 				$.post("include/pdo/empleado.php", {function:"statusEmployee" , cedula:cedula}, function(data){
 					if (data  == '0'){
@@ -384,13 +385,13 @@ $(document).ready(function(){
 		        },
 		      	{         
 		              "render": function ( data, type, row ) {
-		              	edit =  '<img src="imagenes/edit.png" class="edit cursor" id="'+ row[0] +'" data-toggle="modal" data-placement="bottom" title="Editar">';
+		              	edit =  '<img src="imagenes/edit.png" class="edit cursor" cedula="'+ row[0] +'" data-toggle="modal" data-placement="bottom" title="Editar">';
 		              	switch (row[16]){
 			              		case "1":
-			              			block = '<img src="imagenes/block.png" class="camb cursor" id="'+ row[0] +'" data-toggle="modal" data-placement="bottom" data-target="#block" title="Deshabilitar">';
+			              			block = '<img src="imagenes/block.png" class="camb cursor" cedula="'+ row[0] +'" data-toggle="modal" data-placement="bottom" data-target="#block" title="Deshabilitar">';
 			              		break;
 			              		case "0":
-			              			block = '<img src="imagenes/block2.png" class="camb cursor" id="'+ row[0] +'" data-toggle="modal" data-placement="bottom" data-target="#block" title="Habilitar">';
+			              			block = '<img src="imagenes/block2.png" class="camb cursor" cedula="'+ row[0] +'" data-toggle="modal" data-placement="bottom" data-target="#block" title="Habilitar">';
 			              		break;
 			              		default:
 			              			block = '';

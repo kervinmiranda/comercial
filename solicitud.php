@@ -37,7 +37,6 @@ if(isset($_SESSION['user'])){
 <script src="../bootstrap/js/locale/bootstrap-datepicker.es.js"></script>
 <script src="../js/jquery.numeric.js"></script>
 <script src="js/libreriajs.js"></script>
-<script src="js/moment.js"></script>
 <script src="js/chat.js"></script>
 <script>
 $(document).ready(function(){
@@ -58,6 +57,134 @@ $(document).ready(function(){
         $('#formulario').fadeIn(500);
         $('#lista').DataTable().responsive.recalc().columns.adjust();
     });
+
+//Mostrar ventana de Solicitud de Horas Extras
+    $('#lista tbody').on('click', '.extra', function(){
+        cedula = $(this).attr('id');
+        $.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
+            var obj = jQuery.parseJSON(data);
+            $('#cedulahe').val(obj.ci);
+            $('#nombrehe').val(obj.nombre);
+            $('#apellidohe').val(obj.apellido);
+            $('#cargohe').val(obj.cargo);
+            $('#agenciahe').val(obj.agencia);
+            switch(obj.turno){
+                case "1":
+                    $('#turnohe').val("Lunes a Viernes");
+                    $('#fechahe').datepicker({
+                        language: "es",
+                        format: "dd/mm/yyyy",
+                        endDate: new Date(),
+                        autoclose: true,
+                        todayBtn: 1,
+                        daysOfWeekDisabled: [0,6]  
+                    });
+                break;
+                case "2":
+                    $('#turnohe').val("Martes a Sábado");
+                    $('#fechahe').datepicker({
+                        language: "es",
+                        format: "dd/mm/yyyy",
+                        endDate: new Date(),
+                        autoclose: true,
+                        todayBtn: 1,
+                        daysOfWeekDisabled: [0,1]
+                    });
+                break;
+            }
+            horario = obj.horario;
+            $.post("include/pdo/solicitud.php", { function: "getInitHours", horario:horario}, function(data){
+                $("#iniciohe").html(data);
+            });                                                                             
+        });//End post
+        $('#fechahe').val('').parent().removeClass('has-error has-success');
+        $('#iniciohe option:first').prop("selected", "selected");
+        $('#iniciohe').parent().removeClass('has-error has-success');
+        $("#finalhe").empty().append("<option>Seleccionar...</option>").parent().removeClass('has-error has-success');          
+        $('#observacionhe').val('').attr('placeholder','').parent().removeClass('has-error has-success');   
+        $('#horas').bPopup();   
+    });
+
+//Función para buscar las horas una vez seleccionada la primera opcion
+    $("#iniciohe").change(function () {
+        $('#finalhe').empty();         
+           $("#iniciohe option:selected").each(function () {
+            $.post("include/pdo/solicitud.php", { function: "getEndHours", horario:horario, elegido:$(this).val()}, function(data){
+            $("#finalhe").html(data);
+            });
+        });
+   });
+
+//Validar y Guardar Horas Extras
+    $('#guardarhe').click(function(){
+        if (validateForm('#horas')){
+            $('#horas').bPopup().close();
+            bootbox.confirm('¿Seguro que desea Cargar las Horas Extras?', function(result){
+                if (result == true){
+                cedula = $('#cedulahe').val();
+                nombre = $('#nombrehe').val() + ' ' + $('#apellidohe').val();
+                fecha = $('#fechahe').val();
+                inicio = $('#iniciohe').val();
+                final = $('#finalhe').val();
+                observacion = $('#observacionhe').val();
+                    $.post("include/pdo/solicitud.php", {function:"insertHours", cedula:cedula, nombre:nombre, fecha:fecha, inicio:inicio, final:final, observacion:observacion}, function(data){
+                    id = data;
+                        if (id == 0){
+                            $('#error').html('<strong>¡Error!</strong> Error al incluir los datos, Intente Nuevamente.').fadeIn(1000).fadeOut(15000);           
+                        }if (id == 'repetido'){
+                            $('#alerta').html('<strong>¡Alerta!</strong> El Empleado tiene una Carga previa de ese día. Verifique e Intente Nuevamente').fadeIn(1000).fadeOut(15000);
+                        }else{
+                            $('#horas').bPopup().close();                       
+                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Ingresada Correctamente con el N°: <strong>'+id+'</strong>').fadeIn(1000).fadeOut(15000);                                                        
+                        }//End if
+                    });//End pos            
+                }else{
+                    $('#horas').bPopup();
+                }//End if result == true//End If
+            });//End Function bootbox.confirm 
+        }    
+    });
+
+//Mostrar ventana de Solicitud de Día Libre laborado
+    $('#lista tbody').on('click', '.dialab', function(){
+        cedula = $(this).attr('id');
+        $.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
+            var obj = jQuery.parseJSON(data);
+            $('#ceduladl').val(obj.ci);
+            $('#nombredl').val(obj.nombre);
+            $('#apellidodl').val(obj.apellido);
+            $('#cargodl').val(obj.cargo);
+            $('#agenciadl').val(obj.agencia);
+            $('#supervisordl').val(obj.supervisor);
+            switch(obj.turno){
+                case "1":
+                    $('#turnodl').val("Lunes a Viernes");
+                    $('#fechadl').datepicker({
+                        language: "es",
+                        format: "dd/mm/yyyy",
+                        endDate: new Date(),
+                        autoclose: true,
+                        todayBtn: 1,
+                        daysOfWeekDisabled: [0,6]  
+                    });
+                break;
+                case "2":
+                    $('#turnodl').val("Martes a Sábado");
+                    $('#fechadl').datepicker({
+                        language: "es",
+                        format: "dd/mm/yyyy",
+                        endDate: new Date(),
+                        autoclose: true,
+                        todayBtn: 1,
+                        daysOfWeekDisabled: [0,1]
+                    });
+                break;
+            }                                                   
+        });//End post
+        $('#fechadl').val('').parent().removeClass('has-error has-success');;
+        $('#observaciondl').val('').parent().removeClass('has-error has-success');;
+        $('#diaslaborados').bPopup();
+    });//End function
 
 //Convertir la tabla en Datatable
     $('#lista').dataTable({
@@ -117,7 +244,6 @@ $(document).ready(function(){
 
 });
 </script>
-
 </head>
 <body>
 	<?php echo $header?>
@@ -188,7 +314,7 @@ $(document).ready(function(){
 			                <th>Cargo</th>
 			                <th>Agencia</th>
 			                <th>Solicitudes</th>
-			                </tr>
+			             </tr>
 			        </tfoot>     
 			        <tbody>    
 			        </tbody>
@@ -262,7 +388,7 @@ $(document).ready(function(){
                             <option value="2012-2013">2012-2013</option>
                             <option value="2013-2014">2013-2014</option>
                             <option value="2014-2015">2014-2015</option>
-                            <option value="2015-2016">2015-2016</option>                   
+                            <option value="2015-2016">2015-2016</option>
                         </select>
                 </div>	            
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
@@ -296,7 +422,7 @@ $(document).ready(function(){
             <div class="panel-body">
                   <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="cedulahe">Cédula</label>
-                    <input type="text" name="cedulahe" id="cedulahe" class="form-control text-center" readonly>                 	                
+                    <input type="text" name="cedulahe" id="cedulahe" class="form-control text-center" readonly required>   	                
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="nombrehe">Nombre</label>
@@ -313,33 +439,33 @@ $(document).ready(function(){
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="agenciahe">Agencia</label>
                     <input type="text" name="agenciahe" id="agenciahe" class="form-control text-center" readonly>
-                </div>           
+                </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="turnohe">Turno</label>
                     <input type="text" name="turnohe" id="turnohe" class="form-control text-center" readonly>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="fechahe">Fecha</label>
-                    <input type="text" name="fechahe" id="fechahe" class="form-control uncopypaste text-center" readonly>
-                </div>  	            
+                    <input type="text" name="fechahe" id="fechahe" class="form-control uncopypaste text-center" required>
+                </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="iniciohe">Inicio</label>
-                        <select name="iniciohe" id="iniciohe" class="form-control">                                            
+                        <select name="iniciohe" id="iniciohe" class="form-control" required>
                         </select>
-                </div>	            
+                </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="finalhe">Final</label>
-                    <select name="finalhe" id="finalhe" class="form-control">  
+                    <select name="finalhe" id="finalhe" class="form-control" required>  
                             <option>Seleccionar...</option>
                     </select>
-                </div>        
+                </div>
                 <div class="form-group col-xs-12 text-center">
                     <label for="observacionhe">Observación</label>
-                    <textarea name="observacionhe" id="observacionhe" class="form-control text-center"></textarea>
-                </div>			                      	
+                    <textarea name="observacionhe" id="observacionhe" class="form-control text-center" required></textarea>
+                </div>
                 <div class="form-group col-xs-12 text-center">
                     <input type="image" id="guardarhe" src="imagenes/save.png" title="Registrar Solicitud">
-                </div>                    	         
+                </div>
             </div>
         </div><!--End panel -->
         <div class="col-xs-12 col-md-2 col-lg-3"></div>
@@ -356,7 +482,7 @@ $(document).ready(function(){
             <div class="panel-body">
 				<div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="ceduladl">Cédula</label>
-                    <input type="text" name="ceduladl" id="ceduladl" class="form-control text-center" readonly>                 	                
+                    <input type="text" name="ceduladl" id="ceduladl" class="form-control text-center" readonly>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="nombredl">Nombre</label>
@@ -373,7 +499,7 @@ $(document).ready(function(){
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="agenciadl">Agencia</label>
                     <input type="text" name="agenciadl" id="agenciadl" class="form-control text-center" readonly>
-                </div>           
+                </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="turnodl">Turno</label>
                     <input type="text" name="turnodl" id="turnodl" class="form-control text-center" readonly>
@@ -381,14 +507,14 @@ $(document).ready(function(){
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="fechadl">Fecha</label>
                     <input type="text" name="fechadl" id="fechadl" class="form-control uncopypaste text-center" readonly>
-                </div>      
+                </div>
                 <div class="form-group col-xs-12 text-center">
                     <label for="observaciondl">Observación</label>
                     <textarea name="observaciondl" id="observaciondl" class="form-control text-center"></textarea>
-                </div>			                      	
+                </div>
                 <div class="form-group col-xs-12 text-center">
                     <input type="image" id="guardardl" src="imagenes/save.png" title="Registrar Solicitud" >
-                </div>                    	         
+                </div>
             </div>
         </div><!--End panel -->
         <div class="col-xs-12 col-md-2 col-lg-3"></div>
