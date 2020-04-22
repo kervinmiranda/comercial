@@ -67,7 +67,7 @@ $(document).ready(function(){
             $('#nombrehe').val(obj.nombre);
             $('#apellidohe').val(obj.apellido);
             $('#cargohe').val(obj.cargo);
-            $('#agenciahe').val(obj.agencia);
+            $('#agenciahe').val(obj.descripcion);
             switch(obj.turno){
                 case "1":
                     $('#turnohe').val("Lunes a Viernes");
@@ -128,14 +128,13 @@ $(document).ready(function(){
                 final = $('#finalhe').val();
                 observacion = $('#observacionhe').val();
                     $.post("include/pdo/solicitud.php", {function:"insertHours", cedula:cedula, nombre:nombre, fecha:fecha, inicio:inicio, final:final, observacion:observacion}, function(data){
-                    id = data;
-                        if (id == 0){
+                        if (data == 0){
                             $('#error').html('<strong>¡Error!</strong> Error al incluir los datos, Intente Nuevamente.').fadeIn(1000).fadeOut(15000);           
-                        }if (id == 'repetido'){
+                        }if (data == 'repetido'){
                             $('#alerta').html('<strong>¡Alerta!</strong> El Empleado tiene una Carga previa de ese día. Verifique e Intente Nuevamente').fadeIn(1000).fadeOut(15000);
                         }else{
                             $('#horas').bPopup().close();                       
-                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Ingresada Correctamente con el N°: <strong>'+id+'</strong>').fadeIn(1000).fadeOut(15000);                                                        
+                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Ingresada Correctamente con el N°: <strong>'+data+'</strong>').fadeIn(1000).fadeOut(15000);                                                        
                         }//End if
                     });//End pos            
                 }else{
@@ -154,7 +153,7 @@ $(document).ready(function(){
             $('#nombredl').val(obj.nombre);
             $('#apellidodl').val(obj.apellido);
             $('#cargodl').val(obj.cargo);
-            $('#agenciadl').val(obj.agencia);
+            $('#agenciadl').val(obj.descripcion);
             $('#supervisordl').val(obj.supervisor);
             switch(obj.turno){
                 case "1":
@@ -165,7 +164,7 @@ $(document).ready(function(){
                         endDate: new Date(),
                         autoclose: true,
                         todayBtn: 1,
-                        daysOfWeekDisabled: [0,6]  
+                        daysOfWeekDisabled: [1,2,3,4,5]
                     });
                 break;
                 case "2":
@@ -176,7 +175,7 @@ $(document).ready(function(){
                         endDate: new Date(),
                         autoclose: true,
                         todayBtn: 1,
-                        daysOfWeekDisabled: [0,1]
+                        daysOfWeekDisabled: [2,3,4,5,6]
                     });
                 break;
             }                                                   
@@ -185,6 +184,122 @@ $(document).ready(function(){
         $('#observaciondl').val('').parent().removeClass('has-error has-success');;
         $('#diaslaborados').bPopup();
     });//End function
+
+//Validar y Guardar Día Libre Laborado
+    $('#guardardl').click(function(){
+        if (validateForm('#diaslaborados')){
+            $('#diaslaborados').bPopup().close();
+            bootbox.confirm('¿Seguro que desea Registrar el día libre laborado?', function(result){
+                if (result == true){    
+                    cedula = $('#ceduladl').val();
+                    nombre = $('#nombredl').val() + ' ' + $('#apellidodl').val();
+                    fecha = $('#fechadl').val();
+                    observacion = $('#observaciondl').val();            
+                    $.post("include/pdo/solicitud.php", {function:"insertDayOff", cedula:cedula , nombre:nombre, fecha:fecha, observacion:observacion}, function(data){
+                        if (data == '0'){
+                            $('#error').html('<strong>¡Error!</strong> Error al incluir los datos, Intente más tarde.').fadeIn(1000).fadeOut(20000);            
+                        }if (data == 'repetido'){
+                            $('#alerta').html('<strong>¡Alerta!</strong> Ya hay una Registro creado en ese día para el empleado, Verifique los datos e intente de nuevo.').fadeIn(1000).fadeOut(20000);         
+                        }else{
+                            $('#vacacion').bPopup().close();
+                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Ingresada Correctamente con el N°: <strong>'+data+'</strong>').fadeIn(1000).fadeOut(20000);                                                
+                        }//End if
+                    });//End pos
+                }else{
+                    $('#diaslaborados').bPopup();
+                }//End if result == true
+            });//End Function bootbox.confirm
+        }
+    });//End Function guardardl
+
+//Mostrar ventana de Solicitud de vacaciones
+    $('#lista tbody').on('click', '.vacacion', function(){
+        cedula = $(this).attr('id');
+        $.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
+            var obj = jQuery.parseJSON(data);
+            $('#cedulavac').val(obj.ci);
+            $('#nombrevac').val(obj.nombre);
+            $('#apellidovac').val(obj.apellido);
+            $('#cargovac').val(obj.cargo);
+            $('#agenciavac').val(obj.agencia);
+            $('#ingresovac').val(obj.fecha_ingreso);
+            $('#periodovac').html(calculateYearVacations(obj.fecha_ingreso));
+            $('#telefonovac').val(obj.telefono);
+            $('#supervisorvac').val(obj.supervisor);
+            turnov = obj.turno;
+            switch(obj.turno){
+                case "1":
+                    $('#turnovac').val("Lunes a Viernes");                    
+                break;
+                case "2":
+                    $('#turnovac').val("Martes a Sábado");                    
+                break;
+            } 
+            $('#finiciovac').datepicker({
+                language: "es",
+                format: "dd/mm/yyyy",
+                startDate: '0d', 
+                endDate: '+30d',          
+                autoclose: true,
+                todayBtn: 1,                  
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date);   
+                var maxDate = new Date(selected.date);
+                maxDate.setDate(maxDate.getDate() + 30) 
+                $('#ffinalvac').datepicker('setStartDate', minDate);
+                $('#ffinalvac').datepicker('setEndDate', maxDate);
+                $('#ffinalvac').val('');
+            });
+            $("#ffinalvac").datepicker({
+                language: "es",
+                format: "dd/mm/yyyy", 
+                endDate: '+30d',              
+                autoclose: true,
+            });                              
+        });//End post
+        $('#periodo option:first').prop("selected", "selected");
+        $('#periodovac').val('').parent().removeClass('has-error has-success');
+        $('#finiciovac').val('').parent().removeClass('has-error has-success');
+        $('#ffinalvac').val('').parent().removeClass('has-error has-success');
+        $('#observacionvac').val('').parent().removeClass('has-error has-success');    
+        $('#vacacion').bPopup();    
+    });
+
+//Guardar Solicitud de Vacaciones
+    $('#guardarv').click(function(){
+        if (validateForm('#vacacion')){
+            $('#vacacion').bPopup().close();
+            bootbox.confirm('¿Seguro que desea Registrar la Solicitud de Vacaciones?', function(result){
+                if (result == true){    
+                    cedula = $('#cedulavac').val();
+                    nombre = $('#nombrevac').val();
+                    apellido = $('#apellidovac').val();
+                    ingreso = $('#ingresovac').val();
+                    agencia = $('#agenciavac').val();          
+                    periodo = $('#periodovac').val();
+                    telefono = $('#telefonovac').val();
+                    inicio = $('#finiciovac').val();
+                    final = $('#ffinalvac').val();
+                    supervisor = $('#supervisorvac').val();
+                    observacion = $('#observacionvac').val();          
+                    $.post("include/pdo/solicitud.php", {function:'insertVacations', cedula:cedula , nombre:nombre, apellido:apellido, ingreso:ingreso, agencia:agencia, periodo:periodo, telefono:telefono, inicio:inicio, final:final, supervisor:supervisor, observacion:observacion, turno:turnov }, function(data){
+                        if (data == '0'){
+                            $('#error').html('<strong>¡Error!</strong> Error al incluir los datos, Intente mas tarde.').fadeIn(1000).fadeOut(20000);            
+                        }if (data == 'repetido'){
+                            $('#alerta').html('<strong>¡Alerta!</strong> Ya hay una Solicitud creada en ese lapso de tiempo para el empleado, Verifique los datos e intente de nuevo.').fadeIn(1000).fadeOut(20000);            
+                        }else{
+                            $('#vacacion').bPopup().close();
+                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Ingresada Correctamente con el N°: <strong>'+data+'</strong>').fadeIn(1000).fadeOut(20000);            
+                            $('#id_plantilla').val(data);
+                            $('#planilla_vacaciones').submit();                                     
+                        }//End if
+                    });//End pos
+                }else{
+                    $('#vacacion').bPopup();
+                }//End if result == true
+            });//End Function bootbox.confirm
+        }
+    });//End Function guardarv
 
 //Convertir la tabla en Datatable
     $('#lista').dataTable({
@@ -346,62 +461,55 @@ $(document).ready(function(){
             <div class="panel-body">
                   <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="cedula">Cédula</label>
-                    <input type="text" name="cedula" id="cedula" class="form-control  text-center" readonly>                 	                
+                    <input type="text" name="cedulavac" id="cedulavac" class="form-control  text-center" readonly required>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control  text-center" readonly>
+                    <label for="nombrevac">Nombre</label>
+                    <input type="text" name="nombrevac" id="nombrevac" class="form-control  text-center" readonly>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" name="apellido" id="apellido" class="form-control  text-center" readonly>
+                    <label for="apellidovac">Apellido</label>
+                    <input type="text" name="apellidovac" id="apellidovac" class="form-control  text-center" readonly>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="cargo">Cargo</label>
-                    <input type="text" name="cargo" id="cargo" class="form-control text-center" readonly>
+                    <label for="cargovac">Cargo</label>
+                    <input type="text" name="cargovac" id="cargovac" class="form-control text-center" readonly>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="agencia">Agencia</label>
-                    <input type="text" name="agencia" id="agencia" class="form-control text-center" readonly>
+                    <label for="agenciavac">Agencia</label>
+                    <input type="text" name="agenciavac" id="agenciavac" class="form-control text-center" readonly>
                 </div>           
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="turno">Turno</label>
-                    <input type="text" name="turno" id="turno" class="form-control text-center" readonly>
+                    <label for="turnovac">Turno</label>
+                    <input type="text" name="turnovac" id="turnovac" class="form-control text-center" readonly>
                 </div>          
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="supervisor">Supervisor</label>
-                    <input type="text" name="supervisor" id="supervisor" class="form-control text-center " readonly>
+                    <label for="supervisorvac">Supervisor</label>
+                    <input type="text" name="supervisorvac" id="supervisorvac" class="form-control text-center " readonly>
                 </div>          
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="ingreso">Fecha Ingreso</label>
-                    <input type="text" name="ingreso" id="ingreso" class="form-control  text-center" readonly>
+                    <label for="ingresovac">Fecha Ingreso</label>
+                    <input type="text" name="ingresovac" id="ingresovac" class="form-control  text-center" readonly>
                 </div>           
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="telefono">Teléfono</label>
-                    <input type="text" name="telefono" id="telefono" class="form-control text-center" readonly>
+                    <label for="telefonovac">Teléfono</label>
+                    <input type="text" name="telefonovac" id="telefonovac" class="form-control text-center" readonly>
                 </div>	            
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="periodo">Periodo</label>
-                        <select name="periodo" id="periodo" class="form-control" required>
-                            <option value="">Seleccionar...</option>
-                            <option value="2011-2012">2011-2012</option>
-                            <option value="2012-2013">2012-2013</option>
-                            <option value="2013-2014">2013-2014</option>
-                            <option value="2014-2015">2014-2015</option>
-                            <option value="2015-2016">2015-2016</option>
-                        </select>
+                    <label for="periodovac">Periodo</label>
+                        <select name="periodovac" id="periodovac" class="form-control" required></select>
                 </div>	            
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="finicio">Inicio</label>
-                    <input type="text" name="finicio" id="finicio" class="form-control uncopypaste text-center" readonly>
+                    <label for="finiciovac">Inicio</label>
+                    <input type="text" name="finiciovac" id="finiciovac" class="form-control uncopypaste text-center" required>
                 </div>        
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
-                    <label for="finicio">Final</label>
-                    <input type="text" name="ffinal" id="ffinal" class="form-control uncopypaste text-center" readonly>
+                    <label for="ffinalvac">Final</label>
+                    <input type="text" name="ffinalvac" id="ffinalvac" class="form-control uncopypaste text-center" required>
                 </div>
                 <div class="form-group col-xs-12 text-center">
-                    <label for="observacion">Observaciones</label>
-                    <textarea name="observacion" id="observacion" class="form-control text-center"></textarea>
+                    <label for="observacionvac">Observaciones</label>
+                    <textarea name="observacionvac" id="observacionvac" class="form-control text-center" required></textarea>
                 </div>                      	
                 <div class="form-group col-xs-12 text-center">
                     <input type="image" id="guardarv" src="imagenes/save.png" title="Registrar Solicitud">
@@ -482,15 +590,15 @@ $(document).ready(function(){
             <div class="panel-body">
 				<div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="ceduladl">Cédula</label>
-                    <input type="text" name="ceduladl" id="ceduladl" class="form-control text-center" readonly>
+                    <input type="text" name="ceduladl" id="ceduladl" class="form-control text-center" readonly required>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="nombredl">Nombre</label>
-                    <input type="text" name="nombredl" id="nombredl" class="form-control text-center" readonly>
+                    <input type="text" name="nombredl" id="nombredl" class="form-control text-center" readonly required>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="apellidodl">Apellido</label>
-                    <input type="text" name="apellidodl" id="apellidodl" class="form-control text-center" readonly>
+                    <input type="text" name="apellidodl" id="apellidodl" class="form-control text-center" readonly required>
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="cargodl">Cargo</label>
@@ -506,11 +614,11 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group col-xs-12 col-md-6 col-lg-4 text-center">
                     <label for="fechadl">Fecha</label>
-                    <input type="text" name="fechadl" id="fechadl" class="form-control uncopypaste text-center" readonly>
+                    <input type="text" name="fechadl" id="fechadl" class="form-control uncopypaste text-center" required>
                 </div>
                 <div class="form-group col-xs-12 text-center">
                     <label for="observaciondl">Observación</label>
-                    <textarea name="observaciondl" id="observaciondl" class="form-control text-center"></textarea>
+                    <textarea name="observaciondl" id="observaciondl" class="form-control text-center" required></textarea>
                 </div>
                 <div class="form-group col-xs-12 text-center">
                     <input type="image" id="guardardl" src="imagenes/save.png" title="Registrar Solicitud" >

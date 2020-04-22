@@ -90,7 +90,19 @@
 			var buttons = [];
 		}
 		return buttons;
-	}	
+	}
+
+	function calculateYearVacations(year){
+		var initYear = parseInt(year.substring(6, 10));
+		var lastYear = parseInt(new Date().getFullYear());
+		var nextYear;
+		var cadena = '<option value="">Seleccionar...</option>';                            
+		for (i = initYear; i < lastYear; i++) {			
+			nextYear = i + 1;
+			cadena += '<option value="' + i + ' - ' + nextYear + '">'+ i + ' - ' + nextYear +'</option>';
+		}
+		return cadena;
+	}
 
 // Función para validar entradas (Keypress)
 	function validar(key, campo, formato){

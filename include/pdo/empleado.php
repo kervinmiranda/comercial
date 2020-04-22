@@ -109,7 +109,7 @@ if(isset($_SESSION['user'])){
 	// Get Employee
 	function getEmployee($cedula){
 		$objdatabase = new Database();
-		$sql = $objdatabase->prepare("SELECT pla.ci, pla.nombre, pla.apellido, pla.agencia, pla.cargo, DATE_FORMAT(pla.fecha_ingreso, '%d/%m/%Y') as fecha_ingreso, pla.correo, pla.telefono, pla.userlib, pla.cajafact, pla.razon_social, pla.estudio, pla.instruccion, pla.titulo, pla.zonares, pla.direccion, pla.estatus, DATE_FORMAT(pla.fecha_camb, '%d/%m/%Y') as fecha_camb, pla.diasd, pla.diasp, pla.observacion, pla.hijos, pla.supervisor, pla.turno, pla.dpto, age.horario FROM comercial_plantilla pla INNER JOIN comercial_agencia age ON  pla.agencia = age.codigo WHERE pla.ci =:cedula");
+		$sql = $objdatabase->prepare("SELECT pla.ci, pla.nombre, pla.apellido, pla.agencia, age.descripcion, pla.cargo, DATE_FORMAT(pla.fecha_ingreso, '%d/%m/%Y') fecha_ingreso, pla.correo, pla.telefono, pla.userlib, pla.cajafact, pla.razon_social, pla.estudio, pla.instruccion, pla.titulo, pla.zonares, pla.direccion, pla.estatus, DATE_FORMAT(pla.fecha_camb, '%d/%m/%Y') as fecha_camb, pla.diasd, pla.diasp, pla.observacion, pla.hijos, pla.supervisor, pla.turno, pla.dpto, age.horario FROM comercial_plantilla pla LEFT JOIN comercial_agencia age ON  pla.agencia = age.codigo WHERE pla.ci =:cedula");
 		$sql->bindParam(':cedula', $cedula, PDO::PARAM_STR);
 		$sql->execute(); // se confirma que el query existas		
 		$count = $sql->rowCount();//Verificamos el resultado
