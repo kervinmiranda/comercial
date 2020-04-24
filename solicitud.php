@@ -46,6 +46,7 @@ $(document).ready(function(){
 	var agencia = "-"
 	var horario;
 	fillAllAgencies();
+    fillAgencies();
 
 //Buscar Plantilla de Agencia
     $('#agenciasTodas').on('change', '.radioGroup', function(){
@@ -301,6 +302,69 @@ $(document).ready(function(){
         }
     });//End Function guardarv
 
+//Mostrar ventana de Solicitud de Edición de Empleado
+    $('#lista tbody').on('click', '.edit', function(){
+        cedula = $(this).attr('id');
+        $.post("include/pdo/empleado.php", {function:"getEmployee", cedula:cedula}, function(data){
+            var obj = jQuery.parseJSON(data);
+                $('#cedulaedit').val(obj.ci);
+                $('#nombreedit').val(obj.nombre);
+                $('#apellidoedit').val(obj.apellido);
+                $('#cargoedit').val(obj.cargo);
+                $('#agenciaedit').val(obj.descripcion);             
+                turnoee = obj.turno;
+                switch(obj.turno){
+                    case "1":
+                        $('#turnoedit').val("Lunes a Viernes");                    
+                    break;
+                    case "2":
+                        $('#turnoedit').val("Martes a Sábado");                    
+                    break;
+                }                                                          
+        });//End post
+        $('#accionedit option:first, #sucursaledit option:first').prop("selected", "selected");
+        $('#accionedit, #sucursaledit').parent().removeClass('has-error has-success');
+        $('#sucursaledit').parent().removeClass('has-error has-success');
+        $('#comentarioedit').val('').attr('placeholder','').parent().removeClass('has-error has-success');  
+        $('#edit').bPopup()
+    });
+
+//Activar / Desactivar agencia de cambio
+    $('#accionedit').change(function(){
+        if ($('#accionedit').val() == 'Cambiar'){
+            $('#sucursaledit').prop("required", true);
+            $('#tiendaedit, #sucursaledit').show();
+        }else{
+            $('#sucursaledit').removeAttr("required");
+            $('#tiendaedit, #sucursaledit').hide();
+        }           
+    });
+
+//Validar y Guardar solicitud de edición de empleado
+    $('#guardaredit').click(function(){
+        if (validateForm('#edit')){
+            $('#edit').bPopup().close();
+            bootbox.confirm('¿Seguro que desea Cargar la Solicitud de Edición?', function(result){
+                if (result == true){
+                    tipo = $('#accionedit').val();
+                    cedula = $('#cedulaedit').val();
+                    nombre = $('#nombreedit').val() + ' ' + $('#apellidoedit').val();
+                    sucursal = $('#sucursaledit').val();            
+                    observacion = $('#comentarioedit').val();
+                    $.post('include/pdo/incidencia.php', {function:"insertIncidence", tipo:tipo, cedula:cedula, nombre:nombre, sucursal:sucursal, modulo:"Plantilla", observacion:observacion}, function(data){
+                        if (data  == '0'){
+                            $('#error').html('<strong>¡Error!</strong> Error al Agregar Solicitud de Edición, Intente más tarde').fadeIn(1000).fadeOut(5000);
+                        }else{
+                            $('#mensaje').html('<strong>¡Exito!</strong> Solicitud Guardada Correctamente con el No ' + data).fadeIn(1000).fadeOut(5000);
+                        }//End if
+                    });//End post       
+                }else{
+                    $('#edit').bPopup();
+                }//End if
+            });//End Function bootbox
+        }
+    });//End Function
+
 //Convertir la tabla en Datatable
     $('#lista').dataTable({
         "responsive":true,
@@ -357,6 +421,22 @@ $(document).ready(function(){
 		});//End post
 	}
 
+//Llenar Agencias
+    function fillAgencies(){
+        $.post("include/pdo/agencia.php", {function: "getAgencies"}, function(data){
+            if (data != 0){
+            var json = jQuery.parseJSON(data);      
+                $.each(json, function(idx, obj) {
+                    $('#sucursaledit').append('<option value = "'+ obj.codigo +'">' + obj.descripcion + '</option>'); 
+                })
+            }
+        });//End post
+    }
+
+    $('.nav-tabs').on('show.bs.tab', function (e) {
+       $('.radioGroup').prop('checked', false);
+    });
+
 });
 </script>
 </head>
@@ -384,28 +464,29 @@ $(document).ready(function(){
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Consulta
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu">
-				<li><a href="#diasL" aria-controls="diasL" role="tab" data-toggle="tab">Días laborados</a></li>
-				<li><a href="#horasE" aria-controls="horasE" role="tab" data-toggle="tab">Horas Extra</a></li>
-				<li><a href="#vacaciones" aria-controls="vacaciones" role="tab" data-toggle="tab">Vacaciones</a></li>
+				<li><a href="#diasLCon" aria-controls="diasLCon" role="tab" data-toggle="tab">Días laborados</a></li>
+				<li><a href="#horasECon" aria-controls="horasECon" role="tab" data-toggle="tab">Horas Extra</a></li>
+				<li><a href="#vacacionesCon" aria-controls="vacacionesCon" role="tab" data-toggle="tab">Vacaciones</a></li>
 				</ul>
 			</li>
 			<li role="presentation" class="dropdown">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Historial
 				<span class="caret"></span></a>
 				<ul class="dropdown-menu">
-				<li><a href="#diasL2" aria-controls="diasL2" role="tab" data-toggle="tab">Días laborados</a></li>
-				<li><a href="#horasE2" aria-controls="horasE"2 role="tab" data-toggle="tab">Horas Extra</a></li>
-				<li><a href="#vacaciones2" aria-controls="vacaciones2" role="tab" data-toggle="tab">Vacaciones</a></li>
+				<li><a href="#diasLHis" aria-controls="diasLHis" role="tab" data-toggle="tab">Días laborados</a></li>
+				<li><a href="#horasEHis" aria-controls="horasEHis"2 role="tab" data-toggle="tab">Horas Extra</a></li>
+				<li><a href="#vacacionesHis" aria-controls="vacacionesHis" role="tab" data-toggle="tab">Vacaciones</a></li>
 				</ul>
 			</li>			
 		</ul>
 
+        <div class="col-xs-12">
+            <div class="btn-group btn-group-toggle text-center" data-toggle="buttons" id="agenciasTodas"></div>
+        </div>
+
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="cargar">
-				<div class="container-fluid">
-				    <div class="btn-group btn-group-toggle text-center" data-toggle="buttons" id="agenciasTodas"></div>
-				</div>
+			<div role="tabpanel" class="tab-pane active" id="cargar">				
                 <div class="text-center">
                     <h4 id="agencia"></h4>
                 </div>
@@ -437,17 +518,17 @@ $(document).ready(function(){
 		       		<div class="text-center"><img src="imagenes/usuarioadd.png" id="nuevou" title="Agregar Empleado" class="cursor"></div>
 		        </div><!-- End col -->
 			</div>
-			<div role="tabpanel" class="tab-pane" id="diasL">
+			<div role="tabpanel" class="tab-pane" id="diasLCon">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="horasE">
+			<div role="tabpanel" class="tab-pane" id="horasECon">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="vacaciones">
+			<div role="tabpanel" class="tab-pane" id="vacacionesCon">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="diasL2">
+			<div role="tabpanel" class="tab-pane" id="diasLHis">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="horasE2">
+			<div role="tabpanel" class="tab-pane" id="horasEHis">
 			</div>
-			<div role="tabpanel" class="tab-pane" id="vacaciones2">
+			<div role="tabpanel" class="tab-pane" id="vacacionesHis">
 			</div>
 		</div>
         
@@ -569,7 +650,7 @@ $(document).ready(function(){
                 </div>
                 <div class="form-group col-xs-12 text-center">
                     <label for="observacionhe">Observación</label>
-                    <textarea name="observacionhe" id="observacionhe" class="form-control text-center" required></textarea>
+                    <textarea name="observacionhe" id="observacionhe" class="form-control text-center"></textarea>
                 </div>
                 <div class="form-group col-xs-12 text-center">
                     <input type="image" id="guardarhe" src="imagenes/save.png" title="Registrar Solicitud">
@@ -663,7 +744,7 @@ $(document).ready(function(){
 	            </div>
 	            <div class="form-group col-xs-12 col-md-4 text-center">
 	            	<label for="accionedit">Acción</label>
-	            	<select name="accionedit" id="accionedit" class="form-control text-center">
+	            	<select name="accionedit" id="accionedit" class="form-control text-center" required>
 						<option>Seleccionar...</option>
 	                	<option value="Editar">Editar</option>
 	                    <option value="Cambiar">Cambiar de Agencia</option>
@@ -673,13 +754,12 @@ $(document).ready(function(){
 	            <div class="form-group col-xs-12 col-md-4 oculto text-center" id="tiendaedit">
 	            	<label for="sucursaledit">Sucursal</label>
 	            	<select name="sucursaledit" id="sucursaledit" class="form-control text-center">
-						<option>Seleccionar...</option>
-						
+						<option>Seleccionar...</option>						
 	              	</select>                  	                
 	            </div>
 	            <div class="form-group col-xs-12 text-center">
 	                <label for="comentarioedit">Comentario</label>
-	                <textarea name="comentarioedit" id="comentarioedit" class="form-control"></textarea>
+	                <textarea name="comentarioedit" id="comentarioedit" class="form-control" required></textarea>
 	            </div>                   
 				<div class="form-group col-xs-12 text-center">
 	                 <input type="image" name="guardaredit" id="guardaredit" src="imagenes/save.png" title="Generar Incidencia">
